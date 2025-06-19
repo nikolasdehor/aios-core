@@ -1,3 +1,10 @@
+## [4.6.1](https://github.com/bmadcode/BMAD-METHOD/compare/v4.6.0...v4.6.1) (2025-06-19)
+
+
+### Bug Fixes
+
+* expansion pack builder now includes proper dependencies from core as needed, and default template file name save added to template llm instructions ([9dded00](https://github.com/bmadcode/BMAD-METHOD/commit/9dded003565879901246885d60787695e0d0b7bd))
+
 # [4.6.0](https://github.com/bmadcode/BMAD-METHOD/compare/v4.5.1...v4.6.0) (2025-06-18)
 
 
