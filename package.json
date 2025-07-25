@@ -70,7 +70,6 @@
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "aios-fullstack": "^4.31.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.1",
     "prettier": "^3.5.3",
