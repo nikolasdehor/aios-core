@@ -31,6 +31,11 @@ This two-phase approach eliminates both **planning inconsistency** and **context
 - npm
 - GitHub CLI (required for team collaboration)
 
+**Platform-specific guides:**
+- 📖 [macOS Installation Guide](docs/installation/macos.md)
+- 📖 Windows Installation Guide (built-in support)
+- 📖 Linux Installation Guide (built-in support)
+
 ## Quick Navigation
 
 ### Understanding the AIOS Workflow
