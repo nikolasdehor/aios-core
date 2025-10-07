@@ -131,10 +131,6 @@ git push origin fix/typo-in-readme
 
 ## Precisa de Ajuda?
 
-- 💬 Junte-se à nossa [Comunidade Discord](https://discord.gg/gk8jAdXWmj) para ajuda em tempo real:
-  - **#general-dev** - Perguntas técnicas e discussões sobre features
-  - **#bugs-issues** - Obtenha ajuda com bugs antes de criar issues
-- 💬 Faça perguntas nas [GitHub Discussions](https://github.com/allfluenceinc/aios-fullstack/discussions)
 - 🐛 Reporte bugs usando o [template de bug report](https://github.com/allfluenceinc/aios-fullstack/issues/new?template=bug_report.md)
 - 💡 Sugira features usando o [template de feature request](https://github.com/allfluenceinc/aios-fullstack/issues/new?template=feature_request.md)
 - 📖 Leia as [Diretrizes de Contribuição](../CONTRIBUTING.md) completas
