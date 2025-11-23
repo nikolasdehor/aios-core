@@ -268,16 +268,15 @@ async function installProjectMCPs(options = {}) {
  * will be installed automatically by npx when the MCP server first starts.
  * This validation helps catch obvious package name typos during installation.
  */
-async function installNpmPackage(packageName, _projectPath, logPath) {
+async function installNpmPackage(packageName, projectPath, logPath) {
   await appendLog(logPath, `[${new Date().toISOString()}] [INFO] Validating package: ${packageName}`);
 
   try {
     // Test if npx can find the package
     // Note: This may fail if package doesn't support --version flag
     await execAsync(`npx -y ${packageName} --version`, {
-      cwd: _projectPath,
-      timeout: 10000,
-      stdio: 'pipe'
+      cwd: projectPath,
+      timeout: 10000
     });
 
     await appendLog(logPath, `[${new Date().toISOString()}] [SUCCESS] Package ${packageName} validated`);

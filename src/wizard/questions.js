@@ -59,12 +59,21 @@ function getMCPQuestions() {
 
 /**
  * Get environment configuration questions (Story 1.6)
- * This is a placeholder - full implementation in Story 1.6
- * 
- * @returns {Object[]} Array of inquirer question objects
+ *
+ * DESIGN NOTE: Environment configuration uses its own prompt system
+ * via @clack/prompts in packages/installer/src/config/configure-environment.js
+ *
+ * API key prompts are NOT part of wizard questions to keep the
+ * environment module self-contained and testable independently.
+ *
+ * The wizard calls configureEnvironment() directly after IDE selection
+ * in src/wizard/index.js (Task 1.6.7)
+ *
+ * @returns {Object[]} Empty array - prompts handled in environment module
  */
 function getEnvironmentQuestions() {
-  // Placeholder - Story 1.6 will implement environment config
+  // Environment config prompts handled in configure-environment.js
+  // No wizard questions needed for this story
   return [];
 }
 
@@ -84,7 +93,13 @@ function buildQuestionSequence(_context = {}) {
   // Story 1.4: IDE Selection
   questions.push(...getIDEQuestions());
 
-  // Story 1.5-1.6: Additional questions (added in future stories)
+  // Story 1.5: MCP Selection (when implemented)
+  // questions.push(...getMCPQuestions());
+
+  // Story 1.6: Environment Configuration
+  // Note: Env config prompts handled directly in configureEnvironment()
+  // See src/wizard/index.js integration (after IDE config step)
+
   // Future: Conditional questions based on projectType
   // if (context.projectType === 'greenfield') { ... }
 

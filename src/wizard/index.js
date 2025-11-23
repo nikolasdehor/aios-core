@@ -15,6 +15,7 @@ const {
   showCancellation
 } = require('./feedback');
 const { generateIDEConfigs, showSuccessSummary } = require('./ide-config-generator');
+const { configureEnvironment } = require('../../packages/installer/src/config/configure-environment');
 
 /**
  * Handle Ctrl+C gracefully
@@ -93,7 +94,7 @@ async function runWizard() {
 
     // Log performance metrics
     const duration = Date.now() - startTime;
-    const avgTimePerQuestion = duration / questions.length;
+    const avgTimePerQuestion = questions.length > 0 ? duration / questions.length : 0;
 
     if (avgTimePerQuestion > 100) {
       console.warn(`Warning: Average question response time (${avgTimePerQuestion.toFixed(0)}ms) exceeds 100ms target`);
@@ -115,6 +116,54 @@ async function runWizard() {
       }
     }
 
+    // Story 1.6: Environment Configuration
+    console.log('\n📝 Configuring environment...');
+
+    try {
+      const envResult = await configureEnvironment({
+        targetDir: process.cwd(),
+        projectType: answers.projectType || 'greenfield',
+        selectedIDEs: answers.selectedIDEs || [],
+        mcpServers: answers.mcpServers || [],
+        skipPrompts: false  // Interactive mode
+      });
+
+      if (envResult.envCreated && envResult.coreConfigCreated) {
+        console.log('\n✅ Environment configuration complete!');
+        console.log(`  - .env file created`);
+        console.log(`  - .env.example file created`);
+        console.log(`  - .aios-core/core-config.yaml created`);
+        if (envResult.gitignoreUpdated) {
+          console.log(`  - .gitignore updated`);
+        }
+      }
+
+      // Store env config result for downstream stories
+      answers.envConfigured = true;
+      answers.envResult = envResult;
+
+    } catch (error) {
+      console.error('\n⚠️  Environment configuration failed:');
+      console.error(`  ${error.message}`);
+
+      // Ask user if they want to continue without env config
+      const { continueWithoutEnv } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'continueWithoutEnv',
+          message: 'Continue installation without environment configuration?',
+          default: false
+        }
+      ]);
+
+      if (!continueWithoutEnv) {
+        throw new Error('Installation cancelled - environment configuration required');
+      }
+
+      answers.envConfigured = false;
+      console.log('\n⚠️  Continuing without environment configuration...');
+    }
+
     // Show completion
     showCompletion();
 
@@ -131,12 +180,18 @@ async function runWizard() {
 
 /**
  * Answer object schema (for integration documentation)
- * 
+ *
  * @typedef {Object} WizardAnswers
- * @property {string} projectType - 'greenfield' or 'brownfield'
- * @property {string} [ide] - Selected IDE (Story 1.4)
- * @property {string[]} [mcps] - Selected MCPs (Story 1.5)
- * @property {Object} [envConfig] - Environment configuration (Story 1.6)
+ * @property {string} projectType - 'greenfield' or 'brownfield' (Story 1.3)
+ * @property {string[]} [selectedIDEs] - Selected IDEs array (Story 1.4)
+ * @property {string[]} [mcpServers] - Selected MCP servers (Story 1.5)
+ * @property {boolean} [envConfigured] - Whether env config succeeded (Story 1.6)
+ * @property {Object} [envResult] - Environment configuration result (Story 1.6)
+ * @property {boolean} envResult.envCreated - .env file created
+ * @property {boolean} envResult.envExampleCreated - .env.example file created
+ * @property {boolean} envResult.coreConfigCreated - core-config.yaml created
+ * @property {boolean} envResult.gitignoreUpdated - .gitignore updated
+ * @property {Array<string>} envResult.errors - Any errors encountered
  */
 
 module.exports = {

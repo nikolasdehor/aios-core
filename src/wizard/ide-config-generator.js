@@ -13,6 +13,7 @@ const yaml = require('js-yaml');
 const inquirer = require('inquirer');
 const ora = require('ora');
 const { getIDEConfig } = require('../config/ide-configs');
+const { validateProjectName } = require('./validators');
 
 /**
  * Render template with variables
@@ -92,6 +93,57 @@ async function promptFileExists(filePath) {
 }
 
 /**
+ * Sanitize and validate a candidate project name
+ * Converts unsafe directory names to safe project names
+ * 
+ * @param {string} candidate - Candidate project name (e.g., from path.basename)
+ * @returns {string} Safe, validated project name
+ */
+function sanitizeProjectName(candidate) {
+  if (!candidate || typeof candidate !== 'string') {
+    return 'my-project';
+  }
+
+  // Step 1: Convert to lowercase and replace spaces/special chars with dashes
+  let sanitized = candidate
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-zA-Z0-9_-]/g, '-') // Replace non-alphanumeric (except dash/underscore) with dash
+    .replace(/[-_]+/g, '-') // Collapse multiple dashes/underscores into single dash
+    .replace(/^[-_]+|[-_]+$/g, ''); // Remove leading/trailing dashes/underscores
+
+  // Step 2: Ensure it starts with alphanumeric
+  sanitized = sanitized.replace(/^[^a-zA-Z0-9]+/, '');
+  
+  // Step 3: Limit length (validateProjectName allows up to 100)
+  if (sanitized.length > 100) {
+    sanitized = sanitized.substring(0, 100);
+    // Remove trailing dash if truncation created one
+    sanitized = sanitized.replace(/-+$/, '');
+  }
+
+  // Step 4: Validate the sanitized name
+  const validation = validateProjectName(sanitized);
+  
+  if (validation === true && sanitized.length > 0) {
+    return sanitized;
+  }
+
+  // Step 5: If validation fails, generate a safe alphanumeric slug
+  // Use first alphanumeric chars from original, or generate default
+  const alphanumericOnly = candidate.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  if (alphanumericOnly.length > 0 && alphanumericOnly.length <= 100) {
+    const fallbackValidation = validateProjectName(alphanumericOnly);
+    if (fallbackValidation === true) {
+      return alphanumericOnly;
+    }
+  }
+
+  // Step 6: Ultimate fallback - safe default
+  return 'my-project';
+}
+
+/**
  * Generate template variables from wizard state
  * @param {Object} wizardState - Current wizard state
  * @returns {Object} Template variables
@@ -99,8 +151,24 @@ async function promptFileExists(filePath) {
 function generateTemplateVariables(wizardState) {
   const timestamp = new Date().toISOString();
 
+  // Safely get project name with validation
+  // If provided, validate it; otherwise sanitize fallback from directory name
+  let projectName;
+  if (wizardState.projectName) {
+    const validation = validateProjectName(wizardState.projectName);
+    if (validation === true) {
+      projectName = wizardState.projectName;
+    } else {
+      // If provided name is invalid, sanitize it
+      projectName = sanitizeProjectName(wizardState.projectName);
+    }
+  } else {
+    // No project name provided, sanitize fallback from directory name
+    projectName = sanitizeProjectName(path.basename(process.cwd()));
+  }
+
   return {
-    projectName: wizardState.projectName || path.basename(process.cwd()),
+    projectName,
     projectType: wizardState.projectType || 'greenfield',
     timestamp,
     aiosVersion: '2.1.0' // From package.json in real implementation

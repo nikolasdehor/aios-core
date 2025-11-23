@@ -53,6 +53,11 @@ function validateProjectType(input) {
  * Validate and sanitize path input
  * Prevents path traversal attacks (../../../etc/passwd)
  * 
+ * Security policy:
+ * - Cross-drive access is DISALLOWED for security (e.g., C:\ vs D:\ on Windows)
+ * - Path must resolve within baseDir (no up-level traversal)
+ * - Uses path.relative() and root comparison for robust validation across platforms
+ * 
  * @param {string} input - Path input
  * @param {string} baseDir - Base directory (default: process.cwd())
  * @returns {boolean|string} True if valid, error message if invalid
@@ -73,9 +78,26 @@ function validatePath(input, baseDir = process.cwd()) {
   }
 
   // Resolve and verify path is within base directory
-  const resolved = path.resolve(baseDir, input);
+  // Normalize both paths to handle trailing slashes and relative segments
+  const normalizedBaseDir = path.resolve(baseDir);
+  const resolved = path.resolve(normalizedBaseDir, input);
   
-  if (!resolved.startsWith(baseDir)) {
+  // On Windows, check for cross-drive access (e.g., C:\ vs D:\)
+  // Cross-drive targets are disallowed for security - path must stay within same root
+  const baseRoot = path.parse(normalizedBaseDir).root;
+  const resolvedRoot = path.parse(resolved).root;
+  
+  if (baseRoot !== resolvedRoot) {
+    return 'Path must be within project directory (cross-drive access not allowed)';
+  }
+  
+  // Use path.relative to detect traversal attempts
+  // If resolved is within baseDir, relative path won't start with '..'
+  const relativePath = path.relative(normalizedBaseDir, resolved);
+  
+  // Check for up-level traversal indicators
+  // Empty string means paths are identical, which is valid
+  if (relativePath && (relativePath.startsWith('..') || relativePath.includes('..'))) {
     return 'Path must be within project directory (path traversal detected)';
   }
 

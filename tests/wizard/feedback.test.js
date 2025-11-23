@@ -49,8 +49,8 @@ describe('feedback', () => {
       const ora = require('ora');
       ora.mockReturnValue({ start: jest.fn(), stop: jest.fn() });
       
-      const spinner = createSpinner('Loading...');
-      
+      createSpinner('Loading...');
+
       expect(ora).toHaveBeenCalledWith(
         expect.objectContaining({
           text: 'Loading...',
@@ -64,8 +64,8 @@ describe('feedback', () => {
       const ora = require('ora');
       ora.mockReturnValue({ start: jest.fn(), stop: jest.fn() });
       
-      const spinner = createSpinner('Loading...', { color: 'red' });
-      
+      createSpinner('Loading...', { color: 'red' });
+
       expect(ora).toHaveBeenCalledWith(
         expect.objectContaining({
           text: 'Loading...',
@@ -112,7 +112,7 @@ describe('feedback', () => {
       };
       cliProgress.SingleBar.mockImplementation(() => mockBar);
 
-      const bar = createProgressBar(10);
+      createProgressBar(10);
 
       expect(mockBar.start).toHaveBeenCalledWith(10, 0, { task: 'Initializing...' });
     });

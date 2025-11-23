@@ -11,6 +11,17 @@ const inquirer = require('inquirer');
 jest.mock('inquirer');
 jest.mock('../../src/wizard/feedback');
 
+// Mock Story 1.6 environment configuration (added for wizard integration)
+jest.mock('../../packages/installer/src/config/configure-environment', () => ({
+  configureEnvironment: jest.fn().mockResolvedValue({
+    envCreated: true,
+    envExampleCreated: true,
+    coreConfigCreated: true,
+    gitignoreUpdated: true,
+    errors: []
+  })
+}));
+
 const originalLog = console.log;
 const originalWarn = console.warn;
 const originalError = console.error;
@@ -103,10 +114,12 @@ describe('wizard/index', () => {
     });
 
     test('warns if average response time exceeds 100ms', async () => {
-      // Mock slow prompt (> 100ms)
+      // Mock slow prompt (> 100ms average per question)
+      // Note: buildQuestionSequence returns 2 questions (project type + IDE selection)
+      // So total time needs to be > 200ms for average > 100ms per question
       inquirer.prompt = jest.fn().mockImplementation(() => {
         return new Promise(resolve => {
-          setTimeout(() => resolve({ projectType: 'greenfield' }), 150);
+          setTimeout(() => resolve({ projectType: 'greenfield' }), 250);
         });
       });
 
@@ -152,8 +165,8 @@ describe('wizard/index', () => {
 
       const answers = await runWizard();
 
-      // Currently only projectType
-      expect(Object.keys(answers)).toHaveLength(1);
+      // Verify essential property exists regardless of other keys
+      expect(answers).toMatchObject({ projectType: 'greenfield' });
 
       // Future: Will have more keys
       // expect(answers).toHaveProperty('ide');
@@ -168,13 +181,13 @@ describe('wizard/index', () => {
 
       const answers = await runWizard();
 
-      // Currently only projectType
-      expect(Object.keys(answers)).toHaveLength(1);
+      // Currently has projectType, may include more fields from other stories
+      expect(answers).toHaveProperty('projectType');
+      expect(Object.keys(answers).length).toBeGreaterThanOrEqual(1);
 
       // Future: Will have more keys
       // expect(answers).toHaveProperty('mcps');
-    });
-  });
+    });  });
 
   describe('Integration Contract (Story 1.1)', () => {
     test('exports runWizard function', () => {

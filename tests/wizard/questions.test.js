@@ -56,14 +56,16 @@ describe('questions', () => {
   });
 
   describe('getIDEQuestions', () => {
-    test('returns array (placeholder for Story 1.4)', () => {
+    test('returns array of IDE selection questions (Story 1.4)', () => {
       const questions = getIDEQuestions();
       expect(Array.isArray(questions)).toBe(true);
     });
 
-    test('currently returns empty array', () => {
+    test('returns one IDE selection question', () => {
       const questions = getIDEQuestions();
-      expect(questions).toHaveLength(0);
+      expect(questions).toHaveLength(1);
+      expect(questions[0]).toHaveProperty('name', 'selectedIDEs');
+      expect(questions[0]).toHaveProperty('type', 'checkbox');
     });
   });
 
@@ -99,7 +101,7 @@ describe('questions', () => {
 
     test('includes project type question', () => {
       const questions = buildQuestionSequence();
-      expect(questions).toHaveLength(1); // Only Story 1.2 question
+      expect(questions).toHaveLength(2); // Story 1.2 (projectType) + Story 1.4 (IDE)
       expect(questions[0]).toHaveProperty('name', 'projectType');
     });
 
@@ -115,9 +117,9 @@ describe('questions', () => {
       const contextGreenfield = { projectType: 'greenfield' };
       const contextBrownfield = { projectType: 'brownfield' };
 
-      // Currently same length (only Story 1.2 implemented)
-      expect(buildQuestionSequence(contextGreenfield)).toHaveLength(1);
-      expect(buildQuestionSequence(contextBrownfield)).toHaveLength(1);
+      // Currently same length (Stories 1.2 + 1.4 implemented)
+      expect(buildQuestionSequence(contextGreenfield)).toHaveLength(2);
+      expect(buildQuestionSequence(contextBrownfield)).toHaveLength(2);
 
       // Future: lengths may differ based on project type
       // expect(buildQuestionSequence(contextGreenfield).length).not.toBe(
