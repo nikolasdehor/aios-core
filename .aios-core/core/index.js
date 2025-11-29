@@ -30,6 +30,9 @@ const PersonalizedOutputFormatter = require('./utils/output-formatter');
 const YAMLValidator = require('./utils/yaml-validator');
 const { validateYAML } = require('./utils/yaml-validator');
 
+// Service Registry
+const { ServiceRegistry, getRegistry, loadRegistry } = require('./registry/registry-loader');
+
 /**
  * Core module exports
  */
@@ -61,6 +64,11 @@ module.exports = {
   PersonalizedOutputFormatter,
   YAMLValidator,
   validateYAML,
+
+  // Service Registry
+  ServiceRegistry,
+  getRegistry,
+  loadRegistry,
 
   // Version info
   version: '2.0.0',

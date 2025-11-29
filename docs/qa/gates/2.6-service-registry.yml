@@ -1,0 +1,181 @@
+# Quality Gate Decision - Story 2.6
+# Service Registry Creation
+
+schema: 1
+story: "2.6"
+story_title: "Service Registry Creation"
+gate: PENDING
+status_reason: "Story enriched and ready for development. Awaiting implementation."
+reviewer: "Pax (PO)"
+updated: "2025-11-29T20:00:00Z"
+
+waiver:
+  active: false
+
+# Pre-implementation validation
+pre_validation:
+  story_format: PASS
+  acceptance_criteria: PASS
+  definition_of_done: PASS
+  dependencies_clear: PASS
+  estimates_reasonable: PASS
+  rollback_plan: PASS
+
+# Required tests (from story smoke tests)
+required_tests:
+  p0_critical:
+    - id: REG-01
+      name: "Registry Loads"
+      description: "Registry file loads without errors (JSON.parse succeeds)"
+      status: PENDING
+
+    - id: REG-02
+      name: "Schema Valid"
+      description: "Registry validates against JSON schema (ajv.validate returns true)"
+      status: PENDING
+
+    - id: REG-03
+      name: "Worker Count"
+      description: "Registry has 97+ workers cataloged"
+      status: PENDING
+
+  p1_important:
+    - id: REG-04
+      name: "Paths Exist"
+      description: "All worker paths point to existing files"
+      status: PENDING
+
+    - id: REG-05
+      name: "IDs Unique"
+      description: "All worker IDs are unique across registry"
+      status: PENDING
+
+    - id: REG-06
+      name: "Load Performance"
+      description: "Registry loads in < 500ms"
+      status: PENDING
+
+# Deliverables scope
+deliverables:
+  files_to_create:
+    - ".aios-core/core/registry/service-registry.json"
+    - ".aios-core/core/registry/registry-schema.json"
+    - ".aios-core/core/registry/registry-loader.js"
+    - ".aios-core/core/registry/build-registry.js"
+    - ".aios-core/core/registry/validate-registry.js"
+    - ".aios-core/core/registry/README.md"
+  files_to_update:
+    - ".aios-core/core/index.js"
+  worker_categories:
+    - name: "data"
+      estimated_count: 23
+    - name: "testing"
+      estimated_count: 18
+    - name: "code"
+      estimated_count: 15
+    - name: "documentation"
+      estimated_count: 12
+    - name: "validation"
+      estimated_count: 10
+    - name: "integration"
+      estimated_count: 8
+    - name: "workflow"
+      estimated_count: 6
+    - name: "utility"
+      estimated_count: 5
+  total_workers_minimum: 97
+
+# Risk assessment (pre-implementation)
+risk_summary:
+  totals:
+    critical: 0
+    high: 1
+    medium: 2
+    low: 1
+  highest: high
+  identified_risks:
+    - id: "CATALOG-001"
+      severity: high
+      finding: "Large number of workers to catalog (97+) manually"
+      mitigation: "Automated build-registry.js script to scan and extract metadata"
+      status: PLANNED
+
+    - id: "SCHEMA-001"
+      severity: medium
+      finding: "JSON Schema design requires careful validation"
+      mitigation: "Use established JSON Schema draft-2020-12, validate with ajv"
+      status: PLANNED
+
+    - id: "PERF-001"
+      severity: medium
+      finding: "Registry load performance requirement (< 500ms)"
+      mitigation: "Implement caching in registry-loader.js"
+      status: PLANNED
+
+    - id: "PATH-001"
+      severity: low
+      finding: "Worker paths may break during migration"
+      mitigation: "Validation script checks path existence"
+      status: PLANNED
+
+  recommendations:
+    must_fix: []
+    before_start:
+      - "Ensure Stories 2.2-2.5 are complete (modules exist)"
+      - "Identify all task files to catalog in .aios-core/development/tasks/"
+      - "Design JSON schema before implementation"
+    during_implementation:
+      - "Build registry incrementally by category"
+      - "Validate schema after each category added"
+      - "Test load performance frequently"
+    before_completion:
+      - "All 6 REG tests must pass"
+      - "All worker paths verified"
+      - "Performance benchmark documented"
+
+# Quality scoring (pre-implementation baseline)
+quality_score: 90  # Story quality score (format, clarity, completeness)
+# Score breakdown:
+# - Format compliance: 20/20
+# - Acceptance criteria clarity: 20/20
+# - Task breakdown: 18/20
+# - Risk mitigation: 17/20
+# - Documentation: 15/20
+
+# Gate criteria for PASS
+pass_criteria:
+  - "All P0 tests (REG-01, REG-02, REG-03) must pass"
+  - "All P1 tests (REG-04, REG-05, REG-06) must pass"
+  - "Registry contains 97+ workers with complete metadata"
+  - "All worker paths point to existing files"
+  - "Registry loads in < 500ms"
+  - "JSON schema documented and validated"
+
+expires: "2025-12-15T00:00:00Z"  # 2 weeks from approval
+
+evidence:
+  story_validated: true
+  po_approved: true
+  dependencies_met:
+    - story: "2.2"
+      status: "Done"
+    - story: "2.3"
+      status: "Done"
+    - story: "2.4"
+      status: "Done"
+    - story: "2.5"
+      status: "Done"
+  adr_reference: "ADR-002-migration-map.md"
+  blocking_stories:
+    - "2.7 (Discovery CLI - Search)"
+    - "2.8-2.9 (Discovery CLI - Info & List)"
+    - "2.13 (Manifest System)"
+    - "2.14 (Migration Script)"
+
+# QA Verification Results (to be filled after implementation)
+qa_verification:
+  reviewer: null
+  date: null
+  acceptance_criteria: {}
+  regression_tests: {}
+  notes: []
