@@ -13,7 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('yaml');
-const { PMAdapter } = require('../pm-adapter');
+const { PMAdapter } = require('../../scripts/pm-adapter');
 
 /**
  * Local adapter - standalone mode with no external PM tool

@@ -1,10 +1,10 @@
 // @aios-fullstack/core - CommonJS Entry Point
-const MetaAgent = require('./utils/component-generator.js');
-const TaskManager = require('./utils/batch-creator.js');
-const ElicitationEngine = require('./utils/elicitation-engine.js');
-const TemplateEngine = require('./utils/template-engine.js');
-const ComponentSearch = require('./utils/component-search.js');
-const DependencyAnalyzer = require('./utils/dependency-analyzer.js');
+const MetaAgent = require('./infrastructure/scripts/component-generator.js');
+const TaskManager = require('./infrastructure/scripts/batch-creator.js');
+const ElicitationEngine = require('./scripts/elicitation-engine.js');
+const TemplateEngine = require('./infrastructure/scripts/template-engine.js');
+const ComponentSearch = require('./infrastructure/scripts/component-search.js');
+const DependencyAnalyzer = require('./infrastructure/scripts/dependency-analyzer.js');
 
 module.exports = {
     MetaAgent: MetaAgent,

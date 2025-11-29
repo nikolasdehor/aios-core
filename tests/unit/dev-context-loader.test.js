@@ -7,7 +7,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const DevContextLoader = require('../../.aios-core/scripts/dev-context-loader');
+const DevContextLoader = require('../../.aios-core/development/scripts/dev-context-loader');
 
 describe('DevContextLoader', () => {
   let loader;

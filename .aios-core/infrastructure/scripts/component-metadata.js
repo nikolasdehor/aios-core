@@ -6,19 +6,26 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-const { MemoryAdapter } = require('../../memory');
 const chalk = require('chalk');
+
+// Optional memory adapter - gracefully handle if not available
+let MemoryAdapter = null;
+try {
+  ({ MemoryAdapter } = require('../../memory'));
+} catch (e) {
+  // Memory module not available - will use null adapter
+}
 
 class ComponentMetadata {
   constructor(options = {}) {
     this.rootPath = options.rootPath || process.cwd();
     this.metadataPath = path.join(this.rootPath, 'aios-core', 'metadata');
-    
-    // Initialize memory adapter
-    this.memoryClient = new MemoryAdapter({
+
+    // Initialize memory adapter if available
+    this.memoryClient = MemoryAdapter ? new MemoryAdapter({
       persistencePath: path.join(this.rootPath, 'aios-memory-layer-mvp', 'data'),
       namespace: 'component-metadata'
-    });
+    }) : null;
     
     // Component metadata schema version
     this.schemaVersion = '1.0';

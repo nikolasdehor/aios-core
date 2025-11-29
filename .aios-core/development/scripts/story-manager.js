@@ -21,7 +21,7 @@ const { syncStoryToClickUp, detectChanges } = require('./story-update-hook');
 async function getClickUpTool() {
   try {
     // Try using tool-resolver (test environment or future production)
-    const { resolveTool } = require('../../scripts/tool-resolver');
+    const { resolveTool } = require('../../infrastructure/scripts/tool-resolver');
     return await resolveTool('clickup');
   } catch (error) {
     // Fall back to global references (current production pattern)
@@ -293,7 +293,7 @@ async function createStoryInClickUp({
  */
 async function syncStoryToPM(storyPath) {
   try {
-    const { getPMAdapter } = require('../../scripts/pm-adapter-factory');
+    const { getPMAdapter } = require('../../infrastructure/scripts/pm-adapter-factory');
     const adapter = getPMAdapter();
 
     console.log(`📤 Syncing to ${adapter.getName()}...`);
@@ -326,7 +326,7 @@ async function syncStoryToPM(storyPath) {
  */
 async function pullStoryFromPM(storyId) {
   try {
-    const { getPMAdapter, isPMToolConfigured } = require('../../scripts/pm-adapter-factory');
+    const { getPMAdapter, isPMToolConfigured } = require('../../infrastructure/scripts/pm-adapter-factory');
 
     if (!isPMToolConfigured()) {
       console.log('ℹ️  Local-only mode: No PM tool configured');

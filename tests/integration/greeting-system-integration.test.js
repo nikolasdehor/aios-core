@@ -29,7 +29,7 @@ describeIntegration('Unified Greeting System Integration', () => {
         
         try {
           const { stdout, stderr } = await execPromise(
-            `node .aios-core/scripts/generate-greeting.js ${agentId}`
+            `node .aios-core/development/scripts/generate-greeting.js ${agentId}`
           );
           
           // Verify output contains expected elements
@@ -55,7 +55,7 @@ describeIntegration('Unified Greeting System Integration', () => {
       const startTime = Date.now();
       
       try {
-        await execPromise('node .aios-core/scripts/generate-greeting.js qa');
+        await execPromise('node .aios-core/development/scripts/generate-greeting.js qa');
         const duration = Date.now() - startTime;
         
         console.log(`  ⏱️ Generation time: ${duration}ms (target: <${PERFORMANCE_TARGET_MS}ms)`);
@@ -184,7 +184,7 @@ describeIntegration('Unified Greeting System Integration', () => {
       
       try {
         const { stdout } = await execPromise(
-          'node .aios-core/scripts/generate-greeting.js nonexistent-agent 2>&1'
+          'node .aios-core/development/scripts/generate-greeting.js nonexistent-agent 2>&1'
         );
         
         // Should still produce output (fallback)
@@ -210,14 +210,14 @@ if (require.main === module) {
     {
       name: 'Generate greeting for QA agent',
       fn: async () => {
-        const { stdout } = await execPromise('node .aios-core/scripts/generate-greeting.js qa 2>&1');
+        const { stdout } = await execPromise('node .aios-core/development/scripts/generate-greeting.js qa 2>&1');
         return stdout.includes('Quinn') || stdout.includes('ready');
       }
     },
     {
       name: 'Generate greeting for Dev agent',
       fn: async () => {
-        const { stdout } = await execPromise('node .aios-core/scripts/generate-greeting.js dev 2>&1');
+        const { stdout } = await execPromise('node .aios-core/development/scripts/generate-greeting.js dev 2>&1');
         return stdout.includes('Dex') || stdout.includes('ready');
       }
     },
@@ -225,7 +225,7 @@ if (require.main === module) {
       name: 'Performance within limits',
       fn: async () => {
         const start = Date.now();
-        await execPromise('node .aios-core/scripts/generate-greeting.js qa 2>&1');
+        await execPromise('node .aios-core/development/scripts/generate-greeting.js qa 2>&1');
         const duration = Date.now() - start;
         console.log(`    ⏱️ Duration: ${duration}ms`);
         return duration < 500;

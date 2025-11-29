@@ -1,8 +1,23 @@
 const fs = require('fs').promises;
 const path = require('path');
-const { execa } = require('execa');
-const chalk = require('chalk');
-const tmp = require('tmp-promise');
+let execa;
+try {
+  execa = require('execa').execa;
+} catch {
+  execa = null;
+}
+let chalk;
+try {
+  chalk = require('chalk');
+} catch {
+  chalk = { blue: s => s, green: s => s, red: s => s, yellow: s => s };
+}
+let tmp;
+try {
+  tmp = require('tmp-promise');
+} catch {
+  tmp = null;
+}
 
 /**
  * SandboxTester - Test improvements in isolated environment
@@ -21,6 +36,9 @@ class SandboxTester {
    */
   async createSandbox() {
     try {
+      if (!tmp) {
+        throw new Error('tmp-promise module not available - install with: npm install tmp-promise');
+      }
       const tmpDir = await tmp.dir({ unsafeCleanup: !this.keepSandbox });
       this.sandboxPath = tmpDir.path;
 

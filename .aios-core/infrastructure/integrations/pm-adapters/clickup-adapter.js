@@ -11,13 +11,13 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('yaml');
-const { PMAdapter } = require('../pm-adapter');
+const { PMAdapter } = require('../../scripts/pm-adapter');
 const {
   updateStoryStatus,
   updateTaskDescription,
   addTaskComment,
   verifyEpicExists
-} = require('../clickup-helpers');
+} = require('../../scripts/clickup-helpers');
 
 /**
  * ClickUp adapter - integrates with ClickUp for story management
@@ -300,7 +300,7 @@ class ClickUpAdapter extends PMAdapter {
    */
   async _getClickUpTool() {
     try {
-      const { resolveTool } = require('../tool-resolver');
+      const { resolveTool } = require('../../scripts/tool-resolver');
       return await resolveTool('clickup');
     } catch (error) {
       // Fall back to global references

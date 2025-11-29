@@ -5,8 +5,8 @@
  * Tests formatter integration with real task execution
  */
 
-const PersonalizedOutputFormatter = require('../../.aios-core/scripts/output-formatter');
-const OutputPatternValidator = require('../../.aios-core/scripts/validate-output-pattern');
+const PersonalizedOutputFormatter = require('../../.aios-core/infrastructure/scripts/output-formatter');
+const OutputPatternValidator = require('../../.aios-core/infrastructure/scripts/validate-output-pattern');
 const fs = require('fs');
 const path = require('path');
 

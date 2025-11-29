@@ -17,7 +17,7 @@ const {
   trackTest,
   updateMetrics,
   completeDecisionLogging
-} = require('../../.aios-core/scripts/decision-recorder');
+} = require('../../.aios-core/development/scripts/decision-recorder');
 
 describeIntegration('Decision Logging Performance Benchmarks', () => {
   const testStoryPath = 'docs/stories/benchmark-test.md';

@@ -7,8 +7,8 @@
 
 // Mock dependencies before requiring GreetingBuilder
 jest.mock('../../.aios-core/core/session/context-detector');
-jest.mock('../../.aios-core/scripts/git-config-detector');
-jest.mock('../../.aios-core/scripts/project-status-loader', () => ({
+jest.mock('../../.aios-core/infrastructure/scripts/git-config-detector');
+jest.mock('../../.aios-core/infrastructure/scripts/project-status-loader', () => ({
   loadProjectStatus: jest.fn(),
   formatStatusDisplay: jest.fn()
 }));

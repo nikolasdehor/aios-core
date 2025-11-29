@@ -14,10 +14,10 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('yaml');
 
-const { ClickUpAdapter } = require('./pm-adapters/clickup-adapter');
-const { GitHubProjectsAdapter } = require('./pm-adapters/github-adapter');
-const { JiraAdapter } = require('./pm-adapters/jira-adapter');
-const { LocalAdapter } = require('./pm-adapters/local-adapter');
+const { ClickUpAdapter } = require('../integrations/pm-adapters/clickup-adapter');
+const { GitHubProjectsAdapter } = require('../integrations/pm-adapters/github-adapter');
+const { JiraAdapter } = require('../integrations/pm-adapters/jira-adapter');
+const { LocalAdapter } = require('../integrations/pm-adapters/local-adapter');
 
 /**
  * Cached adapter instance (singleton pattern)

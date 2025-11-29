@@ -16,18 +16,8 @@ const util = require('util');
 const execPromise = util.promisify(exec);
 
 const utilsDir = path.join(__dirname);
-const results = [];
-
-console.log('🔍 Framework Utilities Audit Starting...\n');
-console.log(`📁 Scanning directory: ${utilsDir}\n`);
-
-// Get all .js files except test-utilities.js itself
-const utilities = fs.readdirSync(utilsDir)
-  .filter(f => f.endsWith('.js') && f !== 'test-utilities.js')
-  .sort();
-
-console.log(`Found ${utilities.length} utilities to audit\n`);
-console.log('=' .repeat(80));
+let results = [];
+let utilities = [];
 
 /**
  * Count integration references for a utility
@@ -141,6 +131,18 @@ async function testUtility(utilityFile) {
  * Main audit execution
  */
 async function runAudit() {
+  console.log('🔍 Framework Utilities Audit Starting...\n');
+  console.log(`📁 Scanning directory: ${utilsDir}\n`);
+
+  // Get all .js files except test-utilities.js itself
+  utilities = fs.readdirSync(utilsDir)
+    .filter(f => f.endsWith('.js') && f !== 'test-utilities.js')
+    .sort();
+
+  results = [];
+  console.log(`Found ${utilities.length} utilities to audit\n`);
+  console.log('=' .repeat(80));
+
   let processed = 0;
 
   for (const utility of utilities) {

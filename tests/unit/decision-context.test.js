@@ -10,7 +10,7 @@ const {
   DecisionContext,
   DECISION_TYPES,
   PRIORITY_LEVELS
-} = require('../../.aios-core/scripts/decision-context');
+} = require('../../.aios-core/development/scripts/decision-context');
 
 describe('DecisionContext', () => {
   let context;

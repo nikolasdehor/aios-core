@@ -10,7 +10,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const yaml = require('yaml');
-const { PMAdapter } = require('../pm-adapter');
+const { PMAdapter } = require('../../scripts/pm-adapter');
 
 /**
  * GitHub Projects adapter - integrates with GitHub Projects v2

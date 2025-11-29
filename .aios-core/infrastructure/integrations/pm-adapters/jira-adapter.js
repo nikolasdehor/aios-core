@@ -15,7 +15,7 @@
 const https = require('https');
 const fs = require('fs');
 const yaml = require('yaml');
-const { PMAdapter } = require('../pm-adapter');
+const { PMAdapter } = require('../../scripts/pm-adapter');
 
 /**
  * Jira adapter - basic integration with Jira

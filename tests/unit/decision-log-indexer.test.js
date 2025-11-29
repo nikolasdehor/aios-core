@@ -13,7 +13,7 @@ const {
   generateIndexContent,
   addToIndex,
   rebuildIndex
-} = require('../../.aios-core/scripts/decision-log-indexer');
+} = require('../../.aios-core/development/scripts/decision-log-indexer');
 
 // Mock fs.promises
 jest.mock('fs', () => ({

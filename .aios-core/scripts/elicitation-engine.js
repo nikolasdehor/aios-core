@@ -7,7 +7,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs-extra');
 const path = require('path');
-const SecurityChecker = require('./security-checker');
+const SecurityChecker = require('../infrastructure/scripts/security-checker');
 const ElicitationSessionManager = require('./elicitation-session-manager');
 const chalk = require('chalk');
 

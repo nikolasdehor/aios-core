@@ -12,10 +12,10 @@
  */
 
 const ContextDetector = require('../../core/session/context-detector');
-const GitConfigDetector = require('../../scripts/git-config-detector');
+const GitConfigDetector = require('../../infrastructure/scripts/git-config-detector');
 const WorkflowNavigator = require('./workflow-navigator');
 const GreetingPreferenceManager = require('./greeting-preference-manager');
-const { loadProjectStatus, formatStatusDisplay } = require('../../scripts/project-status-loader');
+const { loadProjectStatus, formatStatusDisplay } = require('../../infrastructure/scripts/project-status-loader');
 const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');

@@ -21,7 +21,7 @@ const {
   updateMetrics,
   completeDecisionLogging,
   getCurrentContext
-} = require('../../.aios-core/scripts/decision-recorder');
+} = require('../../.aios-core/development/scripts/decision-recorder');
 
 describeIntegration('Decision Logging + Yolo Mode Integration', () => {
   const testStoryPath = 'docs/stories/test-integration-story.md';

@@ -10,7 +10,7 @@
  * - TTL expiration handling
  */
 
-const ContextDetector = require('../../.aios-core/scripts/context-detector');
+const ContextDetector = require('../../.aios-core/core/session/context-detector');
 const fs = require('fs');
 const path = require('path');
 

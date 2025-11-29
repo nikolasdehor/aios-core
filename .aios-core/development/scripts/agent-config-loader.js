@@ -11,7 +11,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const yaml = require('yaml');
 const { globalConfigCache } = require('../../core/config/config-cache');
-const { trackConfigLoad } = require('../../scripts/performance-tracker');
+const { trackConfigLoad } = require('../../infrastructure/scripts/performance-tracker');
 
 /**
  * Agent configuration requirements cache

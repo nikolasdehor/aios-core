@@ -1,6 +1,6 @@
 // File: common/utils/story-update-hook.js
 
-const { updateTaskDescription, updateStoryStatus, addTaskComment } = require('../../scripts/clickup-helpers');
+const { updateTaskDescription, updateStoryStatus, addTaskComment } = require('../../infrastructure/scripts/clickup-helpers');
 const yaml = require('js-yaml');
 
 /**

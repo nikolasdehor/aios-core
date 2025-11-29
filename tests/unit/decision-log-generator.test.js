@@ -20,7 +20,7 @@ const {
   generateFilesList,
   generateTestsList,
   generateRollbackFilesList
-} = require('../../.aios-core/scripts/decision-log-generator');
+} = require('../../.aios-core/development/scripts/decision-log-generator');
 
 const fs = require('fs').promises;
 const path = require('path');

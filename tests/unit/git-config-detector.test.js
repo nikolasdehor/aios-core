@@ -12,7 +12,7 @@
  * - Graceful error handling
  */
 
-const GitConfigDetector = require('../../.aios-core/scripts/git-config-detector');
+const GitConfigDetector = require('../../.aios-core/infrastructure/scripts/git-config-detector');
 const { execSync } = require('child_process');
 
 // Mock execSync for testing
