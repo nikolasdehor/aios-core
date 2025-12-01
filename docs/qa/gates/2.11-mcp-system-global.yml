@@ -1,0 +1,242 @@
+# Quality Gate Decision - Story 2.11
+# MCP System Global
+
+schema: 1
+story: "2.11"
+story_title: "MCP System Global"
+gate: PENDING
+status_reason: "Story validated and ready for development. Quality gate file created."
+reviewer: "Pax (PO)"
+updated: "2025-11-30T00:00:00Z"
+
+waiver:
+  active: false
+
+# Pre-implementation validation
+pre_validation:
+  story_format: PASS
+  acceptance_criteria: PASS
+  definition_of_done: PASS
+  dependencies_clear: PASS
+  estimates_reasonable: PASS
+  rollback_plan: PASS
+
+# Required tests (from story smoke tests MCP-01 to MCP-12)
+required_tests:
+  p0_critical:
+    - id: MCP-01
+      name: "Setup Creates Dir"
+      description: "`aios mcp setup` creates ~/.aios/mcp/"
+      status: PENDING
+
+    - id: MCP-02
+      name: "Config Created"
+      description: "global-config.json created with schema"
+      status: PENDING
+
+    - id: MCP-03
+      name: "Link Windows"
+      description: "Junction created on Windows"
+      status: PENDING
+
+    - id: MCP-04
+      name: "Link Unix"
+      description: "Symlink created on macOS/Linux"
+      status: PENDING
+
+  p1_important:
+    - id: MCP-05
+      name: "Status Works"
+      description: "`aios mcp status` shows info"
+      status: PENDING
+
+    - id: MCP-06
+      name: "Add Server"
+      description: "`aios mcp add` updates config"
+      status: PENDING
+
+    - id: MCP-07
+      name: "Detect Existing"
+      description: "Detects existing global config"
+      status: PENDING
+
+    - id: MCP-08
+      name: "Migration Offer"
+      description: "Offers migration on conflict"
+      status: PENDING
+
+    - id: MCP-09
+      name: "Migration Execute"
+      description: "Migration moves config correctly"
+      status: PENDING
+
+  p2_nice_to_have:
+    - id: MCP-10
+      name: "Permission Error"
+      description: "Handles permission denied gracefully"
+      status: PENDING
+
+    - id: MCP-11
+      name: "Existing Link"
+      description: "Handles existing link correctly"
+      status: PENDING
+
+    - id: MCP-12
+      name: "Cross-Platform"
+      description: "Works on all 3 OS"
+      status: PENDING
+
+# Deliverables scope
+deliverables:
+  files_to_create:
+    - ".aios-core/core/mcp/global-config-manager.js"
+    - ".aios-core/core/mcp/symlink-manager.js"
+    - ".aios-core/core/mcp/config-migrator.js"
+    - ".aios-core/core/mcp/os-detector.js"
+    - ".aios-core/cli/commands/mcp/index.js"
+    - ".aios-core/cli/commands/mcp/setup.js"
+    - ".aios-core/cli/commands/mcp/link.js"
+    - ".aios-core/cli/commands/mcp/status.js"
+    - ".aios-core/cli/commands/mcp/add.js"
+    - "tests/unit/mcp/global-config-manager.test.js"
+    - "tests/unit/mcp/symlink-manager.test.js"
+    - "tests/integration/mcp-setup.test.js"
+  files_to_update:
+    - ".aios-core/cli/index.js"
+    - "tools/installer/lib/installer.js"
+
+  feature_scope:
+    - name: "Global Structure"
+      checks:
+        - ~/.aios/ directory creation
+        - ~/.aios/mcp/ config storage
+        - global-config.json schema
+    - name: "Symlink/Junction System"
+      checks:
+        - Windows junction points
+        - macOS/Linux symlinks
+        - Link verification
+    - name: "Detection & Migration"
+      checks:
+        - Existing config detection
+        - Migration wizard
+        - Config merger
+    - name: "CLI Integration"
+      checks:
+        - aios mcp setup
+        - aios mcp link
+        - aios mcp status
+        - aios mcp add
+
+# Risk assessment (pre-implementation)
+risk_summary:
+  totals:
+    critical: 0
+    high: 2
+    medium: 2
+    low: 1
+  highest: high
+  identified_risks:
+    - id: "PLATFORM-001"
+      severity: high
+      finding: "Windows junction points require specific permissions"
+      mitigation: "Document developer mode requirement, graceful fallback"
+      status: PLANNED
+
+    - id: "PERMISSION-001"
+      severity: high
+      finding: "macOS/Linux symlinks may fail without proper permissions"
+      mitigation: "Clear error messages, sudo instructions if needed"
+      status: PLANNED
+
+    - id: "MIGRATION-001"
+      severity: medium
+      finding: "Config migration could lose user customizations"
+      mitigation: "Backup before migration, merge strategy"
+      status: PLANNED
+
+    - id: "COMPAT-001"
+      severity: medium
+      finding: "Path differences between platforms"
+      mitigation: "Use path.join(), platform-specific path resolution"
+      status: PLANNED
+
+    - id: "ENV-001"
+      severity: low
+      finding: "Environment variable expansion in config"
+      mitigation: "Clear documentation, validation on load"
+      status: PLANNED
+
+  recommendations:
+    must_fix: []
+    before_start:
+      - "Test junction creation on Windows 10/11"
+      - "Verify developer mode detection"
+      - "Design config merge strategy"
+    during_implementation:
+      - "Implement Windows first (more complex)"
+      - "Test permission handling early"
+      - "Mock filesystem for unit tests"
+    before_completion:
+      - "All 12 MCP tests must pass"
+      - "Test on all 3 platforms"
+      - "Document platform-specific quirks"
+
+# Quality scoring (pre-implementation baseline)
+quality_score: 89
+# Score breakdown:
+# - Format compliance: 20/20
+# - Acceptance criteria clarity: 18/20
+# - Task breakdown: 17/20
+# - Risk mitigation: 17/20
+# - Documentation: 17/20
+
+# Gate criteria for PASS
+pass_criteria:
+  - "All P0 tests (MCP-01 to MCP-04) must pass"
+  - "All P1 tests (MCP-05 to MCP-09) must pass"
+  - "All P2 tests (MCP-10 to MCP-12) should pass (not blocking)"
+  - "Global ~/.aios/mcp/ structure functional"
+  - "Symlinks work on Windows (junction)"
+  - "Symlinks work on macOS/Linux"
+  - "CLI commands functional"
+
+expires: "2025-12-15T00:00:00Z"
+
+evidence:
+  story_validated: true
+  po_approved: true
+  dependencies_met:
+    - story: "1.5"
+      status: "Done"
+  adr_reference: "ADR-002-migration-map.md"
+  blocking_stories:
+    - "2.16 (Documentation)"
+
+# CodeRabbit Integration
+coderabbit_integration:
+  enabled: true
+  focus_areas:
+    primary:
+      - "Cross-platform compatibility"
+      - "Symlink/junction error handling"
+      - "Permission handling"
+    secondary:
+      - "Config file validation"
+      - "Migration safety"
+      - "CLI UX"
+  self_healing:
+    primary_agent: "@dev"
+    max_iterations: 3
+    timeout_minutes: 15
+    severity_filter:
+      - CRITICAL
+      - HIGH
+
+# QA Verification Results (to be filled after implementation)
+qa_verification:
+  reviewer: null
+  date: null
+  acceptance_criteria: {}
+  regression_tests: {}
+  notes: []

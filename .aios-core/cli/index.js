@@ -17,6 +17,7 @@ const fs = require('fs');
 const { createWorkersCommand } = require('./commands/workers');
 const { createManifestCommand } = require('./commands/manifest');
 const { createQaCommand } = require('./commands/qa');
+const { createMcpCommand } = require('./commands/mcp');
 
 // Read package.json for version
 const packageJsonPath = path.join(__dirname, '..', '..', 'package.json');
@@ -44,6 +45,7 @@ Commands:
   workers           Manage and discover workers
   manifest          Manage manifest files (validate, regenerate)
   qa                Quality Gate Manager (run, status)
+  mcp               Manage global MCP configuration
   install           Install AIOS in current project
   init <name>       Create new AIOS project
   info              Show system information
@@ -59,6 +61,9 @@ Examples:
   $ aios manifest regenerate
   $ aios qa run
   $ aios qa status
+  $ aios mcp setup --with-defaults
+  $ aios mcp link
+  $ aios mcp status
   $ aios install
   $ aios doctor
 `);
@@ -71,6 +76,9 @@ Examples:
 
   // Add qa command (Story 2.10)
   program.addCommand(createQaCommand());
+
+  // Add mcp command (Story 2.11)
+  program.addCommand(createMcpCommand());
 
   return program;
 }
