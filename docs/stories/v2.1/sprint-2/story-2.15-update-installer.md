@@ -242,7 +242,11 @@ git revert --no-commit HEAD~N
 - `tools/installer/bin/aios.js` (added --legacy flag to CLI)
 - `tools/installer/lib/installer.js` (v2.1 module paths, expansion pack core dependencies)
 - `tools/installer/lib/config-loader.js` (v2.1 module paths for agents, teams, dependencies)
-- `tools/installer/lib/resource-locator.js` (v2.1 module paths, module mapping)
+- `tools/installer/lib/resource-locator.js` (v2.1 module paths, module mapping, forward-slash normalization)
+- `tools/installer/lib/file-manager.js` (path normalization for cross-platform consistency)
+- `src/installer/aios-core-installer.js` (added v2.1 modules to FOLDERS_TO_COPY)
+- `src/wizard/ide-config-generator.js` (fixed agent source path to development/agents/)
+- `.npmignore` (fixed to include .md files inside .aios-core)
 
 **Created:**
 - `tests/installer/v21-structure.test.js` (23 tests for v2.1 structure validation)
@@ -319,6 +323,9 @@ All 6 smoke tests (INS-01 to INS-06) passing. Code quality good.
 | 2025-12-01 | 1.2 | Fixed file references in File List (validation pass) | Pax |
 | 2025-12-01 | 2.0 | Implementation complete - v2.1 module paths, --legacy flag, 23 tests | Dex |
 | 2025-12-01 | 2.1 | QA Review PASS - All 81 tests pass, all smoke tests verified | Quinn |
+| 2025-12-01 | 2.2 | Hotfix: path normalization (Windows), .npmignore fix for .md files | Dex |
+| 2025-12-01 | 2.3 | Hotfix: aios-core-installer.js FOLDERS_TO_COPY missing v2.1 modules | Dex |
+| 2025-12-01 | 2.4 | Hotfix: ide-config-generator.js agent source path (development/agents) | Dex |
 
 ---
 
