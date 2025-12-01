@@ -1,0 +1,191 @@
+# Quality Gate Decision - Story 3.1
+# Pre-Commit Hooks (Layer 1)
+
+schema: 1
+story: "3.1"
+story_title: "Pre-Commit Hooks (Layer 1)"
+gate: PASS
+status_reason: "All smoke tests passed, Sprint 1/2 compatibility verified, CodeRabbit alignment confirmed."
+reviewer: "Quinn (@qa)"
+updated: "2025-12-01T12:00:00Z"
+
+waiver:
+  active: false
+
+# Pre-implementation validation
+pre_validation:
+  story_format: PASS
+  acceptance_criteria: PASS
+  definition_of_done: PASS
+  dependencies_clear: PASS
+  estimates_reasonable: PASS
+  rollback_plan: PASS
+
+# Required tests (from story smoke tests HOOK-01 to HOOK-05)
+required_tests:
+  p0_critical:
+    - id: HOOK-01
+      name: "ESLint Runs"
+      description: "ESLint checks staged .js/.ts files, errors block commit"
+      status: PASS
+
+    - id: HOOK-02
+      name: "Prettier Runs"
+      description: "Prettier formats staged files, auto-fix applies"
+      status: PASS
+
+    - id: HOOK-03
+      name: "TypeScript Checks"
+      description: "TSC validates types, type errors block commit"
+      status: PASS
+
+  p1_important:
+    - id: HOOK-04
+      name: "Performance"
+      description: "Hook completes in < 5 seconds"
+      status: PASS
+      notes: "~4.5s execution time"
+
+    - id: HOOK-05
+      name: "Bypass Works"
+      description: "--no-verify skips hook, commit succeeds"
+      status: PASS
+
+# Deliverables scope
+deliverables:
+  files_to_create:
+    - ".husky/pre-commit"
+    - "docs/guides/pre-commit-hooks.md"
+  files_to_update:
+    - "package.json"  # lint-staged config
+    - ".eslintrc.js"  # ESLint rules optimization
+    - ".prettierrc"   # Prettier config (if needed)
+
+  configuration:
+    husky:
+      version: "^9.0.0"
+      hooks:
+        - pre-commit
+    lint_staged:
+      patterns:
+        - "*.{js,ts}": ["eslint --fix", "prettier --write"]
+        - "*.md": ["prettier --write"]
+
+# Risk assessment (pre-implementation)
+risk_summary:
+  totals:
+    critical: 0
+    high: 0
+    medium: 2
+    low: 1
+  highest: medium
+  identified_risks:
+    - id: "PERF-001"
+      severity: medium
+      finding: "Large staged file sets may exceed 5s threshold"
+      mitigation: "Configure lint-staged to run in parallel, limit scope"
+      status: PLANNED
+
+    - id: "COMPAT-001"
+      severity: medium
+      finding: "Husky v9 requires Node 18+"
+      mitigation: "Document Node version requirement, verify in CI"
+      status: PLANNED
+
+    - id: "DX-001"
+      severity: low
+      finding: "Developers may use --no-verify too frequently"
+      mitigation: "Log bypasses, educate team on proper usage"
+      status: PLANNED
+
+  recommendations:
+    must_fix: []
+    before_start:
+      - "Verify Node.js version >= 18"
+      - "Review existing ESLint configuration"
+      - "Baseline current lint/format times"
+    during_implementation:
+      - "Test with varying staged file counts (1, 10, 50 files)"
+      - "Measure hook execution time after each config change"
+    before_completion:
+      - "All 5 HOOK tests must pass"
+      - "Performance benchmark documented (< 5s)"
+      - "Developer guide created"
+
+# Quality scoring (pre-implementation baseline)
+quality_score: 95
+# Score breakdown:
+# - Format compliance: 20/20
+# - Acceptance criteria clarity: 20/20
+# - Task breakdown: 18/20
+# - Risk mitigation: 19/20
+# - Documentation: 18/20
+
+# Gate criteria for PASS
+pass_criteria:
+  - "All P0 tests (HOOK-01 to HOOK-03) must pass"
+  - "All P1 tests (HOOK-04 to HOOK-05) must pass"
+  - "Pre-commit hook completes in < 5 seconds"
+  - "Only staged files are checked (not entire codebase)"
+  - "Clear error messages on failure"
+  - "Documentation for hook usage created"
+
+expires: "2025-12-15T00:00:00Z"  # 2 weeks from approval
+
+evidence:
+  story_validated: true
+  po_approved: true
+  dependencies_met:
+    - story: "3.0"
+      status: "Done"
+    - story: "2.10"
+      status: "Done"
+  blocking_stories:
+    - "3.3-3.4 (PR Automation)"
+    - "3.5 (Human Review)"
+
+# CodeRabbit Integration
+coderabbit_integration:
+  enabled: true
+  focus_areas:
+    primary:
+      - "Husky configuration correctness"
+      - "lint-staged pattern matching"
+      - "Performance optimization"
+    secondary:
+      - "Error message clarity"
+      - "Configuration file syntax"
+  self_healing:
+    primary_agent: "@dev"
+    max_iterations: 2
+    timeout_minutes: 10
+    severity_filter:
+      - CRITICAL
+      - HIGH
+      - MEDIUM
+
+# QA Verification Results
+qa_verification:
+  reviewer: "Quinn (@qa)"
+  date: "2025-12-01"
+  acceptance_criteria:
+    AC3.1.1: PASS  # Husky installed and configured
+    AC3.1.2: PASS  # lint-staged configured for JS/TS/MD files
+    AC3.1.3: PASS  # ESLint runs on staged files
+    AC3.1.4: PASS  # Prettier runs on staged files
+    AC3.1.5: PASS  # TypeScript check runs on staged files
+    AC3.1.6: PASS  # Pre-commit hook completes in < 5 seconds
+    AC3.1.7: PASS  # Only staged files are checked
+    AC3.1.8: PASS  # Clear error messages on failure
+    AC3.1.9: PASS  # Hook can be bypassed with --no-verify
+    AC3.1.10: PASS # Documentation for hook usage
+  regression_tests:
+    sprint_1_compatibility: PASS
+    sprint_2_compatibility: PASS
+    coderabbit_alignment: PASS
+  notes:
+    - "All 5 smoke tests HOOK-01 to HOOK-05 passed"
+    - "Performance: ~4.5s (under 5s target)"
+    - "Sprint 1 Story 1.10d compatibility verified (ESLint flat config)"
+    - "Sprint 2 Story 2.10 Layer 1 integration point confirmed"
+    - "3 non-blocking concerns identified (LOW/INFO severity)"

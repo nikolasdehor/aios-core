@@ -60,9 +60,7 @@ sync-*.bat                    # Agent sync scripts
 sync-*.sh                     # Agent sync scripts
 
 # Development tools and configs
-.prettierignore
-.prettierrc
-.husky/
+# Note: .husky/, .prettierrc, .prettierignore are TRACKED for pre-commit hooks (Story 3.1)
 
 # IDE and editor configs
 .windsurf/

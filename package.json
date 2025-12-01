@@ -140,7 +140,11 @@
     "yaml-lint": "^1.7.0"
   },
   "lint-staged": {
-    "**/*.md": [
+    "*.{js,mjs,cjs,ts}": [
+      "eslint --fix --cache --cache-location .eslintcache",
+      "prettier --write"
+    ],
+    "*.md": [
       "prettier --write"
     ]
   }

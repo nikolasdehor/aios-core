@@ -1,17 +1,16 @@
 # Sprint 3 Stories - Quality Gates 3 Layers + Template Engine
 
-**Sprint:** 3 | **Duration:** 2 semanas | **Points:** 67 | **Stories:** 13
+**Sprint:** 3 | **Duration:** 2 semanas | **Points:** 67 | **Stories:** 12
 
 ## 📋 Stories List
 
 | ID | Story | Points | Priority | Status |
 |----|-------|--------|----------|--------|
-| 3.0 | [Core Module Security Hardening](story-3.0-security-hardening.md) | 3 | 🔴 Critical | 🟡 Ready for Dev |
-| 3.1 | Pre-Commit Hooks (Layer 1) | 5 | 🔴 Critical | ⚪ Blocked |
-| 3.2 | CodeRabbit Local Extension | 5 | 🔴 Critical | ⚪ Blocked |
-| 3.3 | PR Automation (Layer 2) | 5 | 🔴 Critical | ⚪ Blocked |
-| 3.4 | Quinn Layer 2 Integration | 8 | 🔴 Critical | ⚪ Blocked |
-| 3.5 | Human Review Orchestration (Layer 3) | 5 | 🟠 High | ⚪ Blocked |
+| 3.0 | [Core Module Security Hardening](story-3.0-security-hardening.md) | 3 | 🔴 Critical | ✅ Done |
+| 3.1 | [Pre-Commit Hooks (Layer 1)](story-3.1-pre-commit-hooks.md) | 5 | 🔴 Critical | 🟡 Ready for Dev |
+| 3.2 | [CodeRabbit Local Extension](story-3.2-coderabbit-local.md) | 5 | 🔴 Critical | 🟡 Ready for Dev |
+| 3.3-3.4 | [PR Automation + Quinn Layer 2](story-3.3-3.4-pr-automation.md) | 13 | 🔴 Critical | ⚪ Blocked |
+| 3.5 | [Human Review Orchestration (Layer 3)](story-3.5-human-review.md) | 5 | 🟠 High | ⚪ Blocked |
 | 3.6 | Template Engine Core Refactor | 8 | 🔴 Critical | ⚪ Blocked |
 | 3.7 | Template PRD v2.0 | 3 | 🟠 High | ⚪ Blocked |
 | 3.8 | Template ADR | 3 | 🟠 High | ⚪ Blocked |
@@ -33,10 +32,10 @@
 
 Before starting feature stories (3.1-3.12), the following must be addressed:
 
-1. **Security Hardening (Story 3.0)** - 🟡 Ready for Dev
-   - ReDoS vulnerability in elicitation-engine.js
-   - Path Traversal vulnerability in session-manager.js
-   - 4 MEDIUM severity fixes required
+1. **Security Hardening (Story 3.0)** - ✅ Done
+   - ReDoS vulnerability fixed with `isSafePattern()` validation
+   - Path Traversal vulnerability fixed with strict sessionId validation
+   - All 4 security vulnerabilities addressed
 
 2. **Test Suite Fixes** - Backlog item [1732978800001](../../backlog/1732978800001-fix-preexisting-test-failures.md)
    - Pre-existing test failures from Sprint 1-2
