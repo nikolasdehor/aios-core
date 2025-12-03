@@ -3,7 +3,7 @@
 **ID:** 3.5 | **Epic:** [EPIC-S3](../../../epics/epic-s3-quality-templates.md)
 **Sprint:** 3 | **Points:** 5 | **Priority:** 🟠 High | **Created:** 2025-01-19
 **Updated:** 2025-12-03
-**Status:** ✅ Ready for PR
+**Status:** ✅ Done
 
 **Reference:** [Quality Gates Decision 4](../../../audits/PEDRO-DECISION-LOG.md#decisão-4)
 **Quality Gate:** [3.5-human-review.yml](../../../qa/gates/3.5-human-review.yml)
@@ -132,7 +132,7 @@ async function orchestrateReview(pr) {
 - [x] HUMAN-01 to HUMAN-05 tests pass
 - [x] Documentation updated
 - [x] QA Review passed (security fixes applied)
-- [ ] PR created and approved
+- [x] PR created and merged (commit 6c44c633)
 
 ---
 
@@ -144,6 +144,7 @@ async function orchestrateReview(pr) {
 | 2025-12-01 | 2.0 | Separated into individual story file | Pax (@po) |
 | 2025-12-03 | 3.0 | Implementation complete, all tests passing | Dex (@dev) |
 | 2025-12-03 | 3.1 | Security fixes (path traversal + race condition) + 9 new tests | Dex (@dev) |
+| 2025-12-03 | 4.0 | Story marked Done - merged to main (commit 6c44c633) | Pax (@po) |
 
 ---
 

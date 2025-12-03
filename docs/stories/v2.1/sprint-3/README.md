@@ -10,7 +10,7 @@
 | 3.1 | [Pre-Commit Hooks (Layer 1)](story-3.1-pre-commit-hooks.md) | 5 | 🔴 Critical | ✅ Done |
 | 3.2 | [CodeRabbit Local Extension](story-3.2-coderabbit-local.md) | 0 | ⚫ N/A | ❌ Cancelled |
 | 3.3-3.4 | [PR Automation Layer 2](story-3.3-3.4-pr-automation.md) | 8 | 🔴 Critical | ✅ Done |
-| 3.5 | [Human Review Orchestration (Layer 3)](story-3.5-human-review.md) | 5 | 🟠 High | ✅ Ready for PR |
+| 3.5 | [Human Review Orchestration (Layer 3)](story-3.5-human-review.md) | 5 | 🟠 High | ✅ Done |
 | 3.6 | [Template Engine Final](story-3.6-3.12-template-engine-final.md) | 8 | 🔴 Critical | ⚪ Blocked |
 | 3.7 | Template PRD v2.0 | 3 | 🟠 High | ⚪ Blocked |
 | 3.8 | Template ADR | 3 | 🟠 High | ⚪ Blocked |
