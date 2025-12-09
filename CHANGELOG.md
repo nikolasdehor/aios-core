@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Open-Source Community Readiness (Epic OSR)** - Legal foundation documentation (Story OSR-3)
+  - Created `PRIVACY.md` - Privacy policy (English)
+  - Created `PRIVACY-PT.md` - Política de privacidade (Português)
+  - Created `TERMS.md` - Terms of use (English)
+  - Created `TERMS-PT.md` - Termos de uso (Português)
+  - Updated `CHANGELOG.md` - Following Keep a Changelog format
+  - Updated `README.md` - Added bilingual legal section table
+  - Updated `CODE_OF_CONDUCT.md` - Added contact information
+  - All legal documents follow industry standard templates with PT-BR translations
+
 - **Agent Command Rationalization** - Consolidated and clarified agent commands for better usability (Story 6.1.2.3)
   - Created 4 new consolidated task files:
     - `.aios-core/tasks/security-audit.md` - Consolidates RLS audit + schema audit

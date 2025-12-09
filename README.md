@@ -676,9 +676,16 @@ Veja também:
 - 📋 [Guia de Git Workflow](docs/git-workflow-guide.md)
 - 📋 [Checklist de Lançamento](docs/launch-checklist.md)
 
-## Licença
+## 📄 Legal
 
-Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+| Documento | English | Português |
+|-----------|---------|-----------|
+| **Licença** | [MIT License](LICENSE) | - |
+| **Privacidade** | [Privacy Policy](PRIVACY.md) | [Política de Privacidade](PRIVACY-PT.md) |
+| **Termos de Uso** | [Terms of Use](TERMS.md) | [Termos de Uso](TERMS-PT.md) |
+| **Código de Conduta** | [Code of Conduct](CODE_OF_CONDUCT.md) | - |
+| **Contribuição** | [Contributing](CONTRIBUTING.md) | - |
+| **Changelog** | [Version History](CHANGELOG.md) | - |
 
 ## Reconhecimentos
 
