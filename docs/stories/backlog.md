@@ -15,7 +15,7 @@
 - 🔧 **Technical Debt**: 4
 - ✨ **Enhancement**: 2
 - 🔴 **Critical**: 0
-- ✅ **Resolved**: 5 (Story 3.11c, Story 5.10, Story OSR-2, Story OSR-3, Story OSR-6)
+- ✅ **Resolved**: 6 (Story 3.11c, Story 5.10, Story OSR-2, Story OSR-3, Story OSR-6, Story OSR-7)
 - ❌ **Obsolete**: 1 (removed from active backlog)
 
 ---
@@ -292,15 +292,17 @@
 
 | Sprint 5 - Foundation | Sprint 6 - Community & Release |
 |-----------------------|--------------------------------|
-| ✅ OSR-1: Audit Session (4h) | OSR-6: Processo Features (4h) |
-| ✅ OSR-2: Repo Investigation (8h) | OSR-7: Public Roadmap (4h) |
+| ✅ OSR-1: Audit Session (4h) | ✅ OSR-6: Processo Features (4h) |
+| ✅ OSR-2: Repo Investigation (8h) | ✅ OSR-7: Public Roadmap (4h) |
 | ✅ OSR-3: Legal Foundation (6h) | OSR-8: Expansion Pack Guide (4h) |
-| OSR-4: GitHub Setup (3h) | OSR-9: Rebranding Synkra (4h) |
-| OSR-5: COMMUNITY.md (4h) | OSR-10: Release Checklist (4h) |
+| ✅ OSR-4: GitHub Setup (3h) | ✅ OSR-9: Rebranding Synkra (4h) |
+| ✅ OSR-5: COMMUNITY.md (4h) | OSR-10: Release Checklist (4h) |
 
 📄 **[Ver Epic Completo](epic-open-source-readiness/EPIC-OSR-INDEX.md)**
 
-**Status Atual:** 🚀 6/10 stories completas (OSR-1, OSR-2, OSR-3, OSR-4, OSR-5, OSR-6) | Sprint 6 em progresso
+**Status Atual:** 🚀 8/10 stories completas (OSR-1 a OSR-7, OSR-9) | Sprint 6 em progresso
+
+**GitHub Project:** [AIOS Public Roadmap](https://github.com/orgs/SynkraAI/projects/1)
 
 ---
 
@@ -374,11 +376,35 @@
 
 | ID | Type | Title | Priority | Related Story | Resolved | PR |
 |----|------|-------|----------|---------------|----------|-----|
+| 1733870000001 | ✅ Resolved | Public Roadmap for Community | 🟡 Medium | [OSR-7](v2.1/sprint-6/story-osr-7-public-roadmap.md) ✅ Done | 2025-12-10 | [PR #2](https://github.com/SynkraAI/aios-core/pull/2) |
 | 1733830000001 | ✅ Resolved | Feature Request Process | 🟠 High | [OSR-6](v2.1/sprint-6/story-osr-6-features-process.md) ✅ Done | 2025-12-10 | [PR #1](https://github.com/SynkraAI/aios-core/pull/1) |
 | 1733750000001 | ✅ Resolved | Legal Foundation Documentation | 🔴 Critical | [OSR-3](v2.1/sprint-5/story-osr-3-legal-foundation.md) ✅ Done | 2025-12-09 | [PR #31](https://github.com/Pedrovaleriolopez/aios-fullstack/pull/31) |
 | 1733749000001 | ✅ Resolved | Repository Strategy Investigation | 🔴 Critical | [OSR-2](v2.1/sprint-5/story-osr-2-repo-investigation.md) ✅ Done | 2025-12-08 | - |
 | 1733664000001 | ✅ Resolved | GitHub DevOps Setup for User Projects | 🔴 Critical | [5.10](v2.1/sprint-5/story-5.10-github-devops-user-projects.md) ✅ Done | 2025-12-08 | [PR #29](https://github.com/Pedrovaleriolopez/aios-fullstack/pull/29) |
 | 1733673600001 | ✅ Resolved | Quality Metrics Live Integration | 🔴 Critical | [3.11c](v2.1/sprint-3/story-3.11c-metrics-live-integration.md) ✅ Done | 2025-12-08 | [PR #28](https://github.com/Pedrovaleriolopez/aios-fullstack/pull/28) |
+
+### ~~Public Roadmap for Community (ID: 1733870000001)~~ ✅ RESOLVED
+
+**Created:** 2025-12-05 | **Resolved:** 2025-12-10 | **Sprint:** 6
+
+**Problem:** Comunidade não tinha visibilidade sobre a direção do projeto e planejamento futuro.
+
+**Solution Implemented (PR #2 - aios-core):**
+- [x] GitHub Project "AIOS Public Roadmap" criado e público
+- [x] Custom fields: Quarter, Area, Size, Progress
+- [x] 15 itens de roadmap (Q1 2026, Q2 2026, Future)
+- [x] `ROADMAP.md` com visão, planos e processo de influência
+- [x] Links em README.md, COMMUNITY.md, CONTRIBUTING.md
+- [x] Processo de sync documentado entre backlog interno e roadmap público
+
+**Result:** Roadmap público completo com GitHub Project e documentação.
+
+**Links:**
+- 📄 [Ver Story OSR-7](v2.1/sprint-6/story-osr-7-public-roadmap.md)
+- 🗺️ [GitHub Project](https://github.com/orgs/SynkraAI/projects/1)
+- 📋 [ROADMAP.md](../../ROADMAP.md)
+
+---
 
 ### ~~Feature Request Process (ID: 1733830000001)~~ ✅ RESOLVED
 
