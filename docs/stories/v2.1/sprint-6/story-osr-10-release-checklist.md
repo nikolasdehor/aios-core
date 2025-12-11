@@ -118,7 +118,7 @@ Criar e executar um checklist abrangente que valide todos os itens necessários 
 |------|--------|-------------|-------|
 | [ ] Feature process documentado | | | OSR-6 |
 | [ ] Public roadmap disponível | | | OSR-7 |
-| [ ] Expansion pack guide criado | | | OSR-8 |
+| [ ] Squads guide criado | | | OSR-8 |
 | [ ] Good first issues identificados | | | |
 | [ ] Welcome message configurado | | | |
 | [ ] Discord/chat setup (se aplicável) | | | |
@@ -173,20 +173,24 @@ Testar instalação do zero:
 
 ```bash
 # 1. Clonar em diretório limpo
-git clone <repo-url> test-install
+git clone https://github.com/SynkraAI/aios-core.git test-install
 cd test-install
 
 # 2. Instalar dependências
 npm install
 
-# 3. Executar setup
-npm run setup
+# 3. Verificar build
+npm run build
 
-# 4. Verificar funcionamento básico
-npm start
+# 4. Executar testes
+npm test
 
-# 5. Testar um agent básico
-# @aios-master *help
+# 5. Verificar estrutura AIOS
+ls -la .aios-core/
+ls -la docs/guides/
+
+# 6. Testar um agent básico (se Claude Code disponível)
+# @dev *help
 ```
 
 ---
@@ -239,15 +243,17 @@ AND the project is ready for public release
 ## 🔗 Dependencies
 
 **Blocked by:**
-- OSR-1: Validation Audit (tudo validado)
-- OSR-2: Repo Investigation (decisão tomada)
-- OSR-3: Legal Foundation (docs criados)
-- OSR-4: GitHub Setup (configurado)
-- OSR-5: COMMUNITY.md (criado)
-- OSR-6: Features Process (documentado)
-- OSR-7: Public Roadmap (publicado)
-- OSR-8: Expansion Pack Guide (criado)
-- OSR-9: Rebranding (decisão tomada)
+- ✅ OSR-1: Validation Audit (tudo validado)
+- ✅ OSR-2: Repo Investigation (decisão tomada)
+- ✅ OSR-3: Legal Foundation (docs criados)
+- ✅ OSR-4: GitHub Setup (configurado)
+- ✅ OSR-5: COMMUNITY.md (criado)
+- ✅ OSR-6: Features Process (documentado)
+- ✅ OSR-7: Public Roadmap (publicado)
+- ✅ OSR-8: Squads Guide (criado)
+- ✅ OSR-9: Rebranding (decisão tomada)
+
+**All dependencies complete!** Epic OSR-10 is ready for execution.
 
 **Blocks:**
 - 🚀 **v2.1 Public Release**
@@ -268,18 +274,33 @@ AND the project is ready for public release
 
 ## 📎 Arquivos Relacionados
 
+### Artefatos das Stories OSR (Criados)
+
+| Story | Artefatos Principais |
+|-------|---------------------|
+| OSR-3 | `LICENSE`, `TERMS.md`, `TERMS-PT.md`, `PRIVACY.md`, `PRIVACY-PT.md`, `CHANGELOG.md` |
+| OSR-4 | `.github/ISSUE_TEMPLATE/`, `.github/DISCUSSION_TEMPLATE/`, `.github/labeler.yml`, `CODEOWNERS` |
+| OSR-5 | `COMMUNITY.md` |
+| OSR-6 | `docs/FEATURE_PROCESS.md`, `.github/DISCUSSION_TEMPLATE/idea.yml`, `.github/RFC_TEMPLATE.md` |
+| OSR-7 | `ROADMAP.md`, [GitHub Project](https://github.com/orgs/SynkraAI/projects/1) |
+| OSR-8 | `docs/guides/squads-guide.md`, `templates/squad/`, `docs/guides/squad-examples/` |
+| OSR-9 | Rebranding para SynkraAI completo |
+
 ### Checklists Existentes
 - `.github/PULL_REQUEST_TEMPLATE.md` - PR checklist
 - `CONTRIBUTING.md` - Contribution checklist
 
 ### Templates de Release
-- `.github/workflows/release.yml` - Release workflow
-- `docs/templates/release-notes.md` - Release notes template
+- `.github/workflows/npm-publish.yml` - Release workflow
+- `CHANGELOG.md` - Keep a Changelog format
 
 ### Scripts de Validação
 ```bash
-# Criar script de validação automatizada
-scripts/pre-release-check.sh
+# Pre-release validation commands
+npm test                    # Run all tests
+npm run lint               # Check linting
+npm run typecheck          # TypeScript validation
+npm audit                  # Security audit
 ```
 
 ---
@@ -301,23 +322,25 @@ scripts/pre-release-check.sh
 Quando o release for bem-sucedido:
 
 1. **Announcement**
-   - GitHub Discussions (Announcements category)
-   - Twitter/X
+   - [GitHub Discussions - Announcements](https://github.com/SynkraAI/aios-core/discussions/categories/announcements)
+   - Twitter/X (@SynkraAI)
    - LinkedIn
    - Dev.to / Hashnode
-   - Reddit (r/programming, r/typescript, etc.)
+   - Reddit (r/programming, r/typescript, r/artificialintelligence)
 
 2. **Community Engagement**
    - Responder primeiros comentários
-   - Criar "Welcome to v2.1" discussion
+   - Criar "Welcome to AIOS v2.1" discussion
    - Identificar early contributors
+   - Criar "good first issues" para novos contribuidores
 
 3. **Retrospective**
-   - O que funcionou bem no processo
+   - O que funcionou bem no processo OSR
    - O que pode melhorar para v2.2
-   - Documentar learnings
+   - Documentar learnings no CHANGELOG
 
 ---
 
 **Criado por:** River (SM) 🌊
 **Data:** 2025-12-05
+**Atualizado:** 2025-12-10 (nomenclatura Squads, referências atualizadas)
