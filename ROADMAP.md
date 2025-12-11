@@ -92,6 +92,22 @@ This roadmap is reviewed and updated monthly by the project maintainers.
 
 **Responsible:** @pm (Morgan) or @po (Pax) agents, with maintainer oversight.
 
+### Sync with Internal Backlog
+
+This public roadmap is synchronized with our internal sprint planning:
+
+| Public Roadmap | Internal Tracking |
+|----------------|-------------------|
+| [GitHub Project](https://github.com/orgs/SynkraAI/projects/1) | `docs/stories/backlog.md` |
+| High-level features | Detailed stories per sprint |
+| Quarterly timeline | Sprint-based execution |
+
+**Sync Checklist (Monthly):**
+- [ ] Review completed sprints in `docs/stories/v2.1/`
+- [ ] Update GitHub Project items status (Done/In Progress)
+- [ ] Add new approved features from backlog to Project
+- [ ] Update this ROADMAP.md with latest progress
+
 ## Disclaimer
 
 This roadmap represents our current plans and is subject to change based on community feedback, technical constraints, and strategic priorities. Dates are estimated quarters, not commitments. We use quarters rather than specific dates to maintain flexibility while providing visibility into our direction.
