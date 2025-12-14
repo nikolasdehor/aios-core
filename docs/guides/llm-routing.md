@@ -22,8 +22,19 @@ LLM Routing provides two commands for different use cases:
 
 ### Installation
 
+**Option 1: If you have aios-core cloned**
 ```bash
 # From aios-core directory
+node .aios-core/infrastructure/scripts/llm-routing/install-llm-routing.js
+```
+
+**Option 2: Fresh install**
+```bash
+# Clone the repository
+git clone https://github.com/SynkraAI/aios-core.git
+cd aios-core
+
+# Run the installer
 node .aios-core/infrastructure/scripts/llm-routing/install-llm-routing.js
 ```
 
