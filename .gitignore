@@ -102,8 +102,7 @@ tests/                        # Test files for expansion projects
 
 # AIOS Development Artifacts (generated during workflow execution)
 # These files are created by agents during development and should NOT be in version control
-docs/prd/                     # Sharded PRD epics (generated from docs/prd.md)
-docs/analysis/                # Analysis artifacts
+# NOTE: docs/prd/ is TRACKED - it contains important product documentation
 qa/                           # Test artifacts and quality assurance files
 epic-retrospective.md         # Epic retrospective documents
 *.stats.md                    # Statistics and analysis files
@@ -156,3 +155,53 @@ NUL
 CON
 AUX
 PRN
+
+# ============================================
+# GENERATED ARTIFACTS (Story 6.12)
+# ============================================
+
+# Framework runtime artifacts
+.aios-core/.session/
+.aios-core/manifests/*.csv
+.aios-core/core/registry/service-registry.json
+
+# Quality metrics (generated during testing)
+.aios/data/quality-metrics.json
+.aios-core/quality/metrics-*.json
+.aios-core/data/quality-metrics.json
+
+# Session data
+.aios-core/.session/current-session.json
+
+# ============================================
+# ARCHIVED DOCUMENTATION (Story 6.12)
+# ============================================
+# Historical documentation moved to .github/deprecated-docs/
+# These are internal development artifacts, not user documentation
+# NOTE: Keep archived in repo for historical reference,
+#       but prevent new files from being added accidentally
+# .github/deprecated-docs/  # TRACKED - contains archived docs
+
+# ============================================
+# DEVELOPMENT ARTIFACTS
+# ============================================
+# Office documents should not be in repo
+*.docx
+*.xlsx
+*.pptx
+
+# Test/sample files (prefixed patterns)
+test-sample-*.md
+*-sample-*.md
+
+# Backup/archive patterns
+*.backup
+*.old
+*~
+
+# TypeScript incremental build cache
+.tsbuildinfo
+*.tsbuildinfo
+
+# ESLint cache
+.eslintcache

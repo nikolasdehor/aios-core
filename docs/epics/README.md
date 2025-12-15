@@ -1,181 +1,112 @@
-# AIOS v2.1 - Épicos
+# AIOS Epics
 
-**Version:** 2.1.0  
-**Status:** 📋 Ready for PO Review  
-**Created:** 2025-01-19  
-**Owner:** River (SM - Facilitator)
-
----
-
-## 📊 Overview
-
-Este diretório contém os **5 épicos** que compõem o roadmap completo do **AIOS v2.1**.
-
-**Timeline Total:** 8.5 semanas (42.5 dias úteis) ← **Updated per PO approval**  
-**Total Stories:** 53 stories + 3 sub-stories  
-**Total Points:** 289 pontos
+**Version:** 2.1.0
+**Status:** 📋 Active Development
+**Updated:** 2025-12-14
 
 ---
 
-## 🏃 Épicos por Sprint
-
-### Sprint 1: Foundation (1 semana - 53 pts)
-📄 **[EPIC-S1: Installer Híbrido Foundation](./epic-s1-installer-foundation.md)**
-
-**Objetivo:** Installer híbrido funcional (npx + wizard) em 5 minutos  
-**Stories:** 12 stories  
-**Status:** 📋 Backlog
-
----
-
-### Sprint 2: Architecture (2.5 semanas - 91 pts)
-📄 **[EPIC-S2: Modular Architecture + Service Discovery](./epic-s2-modular-architecture.md)**
-
-**Objetivo:** Arquitetura modular (4 modules) + Service Discovery (97+ workers)  
-**Stories:** 16 stories  
-**Status:** 📋 Backlog
-
----
-
-### Sprint 3: Quality & Templates (2 semanas - 64 pts)
-📄 **[EPIC-S3: Quality Gates 3 Layers + Template Engine](./epic-s3-quality-templates.md)**
-
-**Objetivo:** Quality Gates 3 layers + Template Engine completo + CodeRabbit local  
-**Stories:** 12 stories  
-**Status:** 📋 Backlog
-
----
-
-### Sprint 4: DevOps Setup (1 semana - 42 pts)
-📄 **[EPIC-S4: DevOps Setup + GitHub Integration](./epic-s4-devops-setup.md)**
-
-**Objetivo:** DevOps automation + CodeRabbit GitHub App + CI/CD  
-**Stories:** 7 stories  
-**Status:** 📋 Backlog
-
----
-
-### Sprint 5: Documentation (1 semana - 39 pts)
-📄 **[EPIC-S5: Complete Documentation v2.1](./epic-s5-documentation.md)**
-
-**Objetivo:** Documentação completa (migration + guides + API + videos + FAQ)  
-**Stories:** 6 stories  
-**Status:** 📋 Backlog
-
----
-
-## 📈 Roadmap Visual
+## 📁 Directory Structure
 
 ```
-Sprint 1 │████████████│ Foundation        (1 week)   - 53 pts
-Sprint 2 │████████████████████████████████│ Architecture   (3 weeks)   - 91 pts ← Extended
-Sprint 3 │████████████████████│ Quality          (2 weeks)   - 64 pts
-Sprint 4 │████████████│ DevOps          (1 week)   - 42 pts
-Sprint 5 │████████████│ Documentation   (1 week)   - 39 pts
-         └────────────────────────────────────────────────────────────┘
-          Week 1  2  3  4  5  6  7  8  9
-
-Total: 8.5 weeks | 289 points | 53 stories + 3 sub-stories
+docs/epics/
+├── README.md          # This file
+├── current/           # Active epics in development
+├── archived/          # Completed or deprecated epics
+└── future/            # Planned epics (not yet started)
 ```
 
 ---
 
-## 🎯 Success Criteria (v2.1 Complete)
+## 🏃 Current Epics (Active Development)
 
-### Installation & Setup
-- [ ] npx install em < 5 minutos (vs. 2-4h em v2.0)
-- [ ] 98% success rate (vs. 60% em v2.0)
-- [ ] Cross-platform (Windows + macOS + Linux)
-
-### Architecture
-- [ ] 4 modules claros (core/development/product/infrastructure)
-- [ ] 97+ workers catalogados e searchable
-- [ ] Service Discovery < 30s
-- [ ] Zero breaking changes
-
-### Quality
-- [ ] 80% issues caught automatically (layers 1+2)
-- [ ] 75% reduction in human review time
-- [ ] CodeRabbit working (local + GitHub)
-
-### DevOps
-- [ ] GitHub setup < 5 minutos
-- [ ] CI/CD pipelines working
-- [ ] Deployment automation
-
-### Documentation
-- [ ] 100% documentation coverage
-- [ ] 50+ FAQ entries
-- [ ] 5 video tutorials
-- [ ] Migration guide complete
+| Epic | Description | Status |
+|------|-------------|--------|
+| [epic-osr-open-source-readiness](./current/epic-osr-open-source-readiness.md) | Open-Source Release preparation | 🔄 In Progress |
+| [epic-6.1-agent-identity-system](./current/epic-6.1-agent-identity-system.md) | Agent Identity & Greeting System | 🔄 In Progress |
+| [epic-6.2-mcp-ecosystem-docs](./current/epic-6.2-mcp-ecosystem-docs.md) | MCP Ecosystem Documentation | 📋 Ready |
+| [epic-6.3-coderabbit-integration](./current/epic-6.3-coderabbit-integration.md) | CodeRabbit Integration | 📋 Ready |
+| [epic-6.4-partner-foundation](./current/epic-6.4-partner-foundation.md) | Partner Foundation | 📋 Ready |
 
 ---
 
-## 📚 Documentação de Referência
+## 📚 Archived Epics (Completed)
 
-### Decisões do Pedro
-- [PEDRO-COMPLETE-DECISIONS](../audits/PEDRO-COMPLETE-DECISIONS-CONSOLIDATED-2025-01-19.md) - Todas as 11 decisões
-- [PEDRO-DECISION-LOG](../audits/PEDRO-DECISION-LOG.md) - Log detalhado
+| Epic | Description | Status |
+|------|-------------|--------|
+| [1-hybrid-ops-pv-mind-integration](./archived/1-hybrid-ops-pv-mind-integration.md) | Hybrid Ops & PV Mind Integration | ✅ Done |
+| [2-aios-development-infrastructure](./archived/2-aios-development-infrastructure.md) | Development Infrastructure | ✅ Done |
+| [epic-3-gap-remediation-BACKLOG](./archived/epic-3-gap-remediation-BACKLOG.md) | Gap Remediation | ✅ Done |
+| [epic-4-overview](./archived/epic-4-overview.md) | Epic 4 Overview | ✅ Done |
+| [epic-5-tools-system](./archived/epic-5-tools-system.md) | Tools System | ✅ Done |
+| [EPIC-2-STRATEGIC-ANALYSIS](./archived/EPIC-2-STRATEGIC-ANALYSIS.md) | Strategic Analysis | 📄 Report |
+| [EPIC-3-PRIORITY-ANALYSIS](./archived/EPIC-3-PRIORITY-ANALYSIS.md) | Priority Analysis | 📄 Report |
+| [EPIC-3B-COMPLETION-REPORT](./archived/EPIC-3B-COMPLETION-REPORT.md) | Completion Report | 📄 Report |
+| [EPIC-3C-UNBLOCKED-REPORT](./archived/EPIC-3C-UNBLOCKED-REPORT.md) | Unblocked Report | 📄 Report |
 
-### Livros de Ouro
-- [AIOS-LIVRO-DE-OURO-V2.1](../standards/AIOS-LIVRO-DE-OURO-V2.1-SUMMARY.md) - Delta v2.1
-- [AIOS-LIVRO-DE-OURO](../standards/AIOS-LIVRO-DE-OURO.md) - Base v2.0
+---
 
-### Handoff & Planning
-- [HANDOFF-SM-PO-V2.1](../audits/HANDOFF-SM-PO-V2.1-EPIC-STORIES-2025-01-19.md) - Documento master
+## 🔮 Future Epics (Roadmap)
+
+### Phase 0: Demo & Foundation
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-9-phase0-demo](./future/epic-9-phase0-demo.md) | Phase 0 Demo | High |
+
+### Phase 1: MCP Integration
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-10-phase1-mcp](./future/epic-10-phase1-mcp.md) | MCP Phase 1 | Medium |
+
+### Phase 2: Expansion Packs
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-11-phase2-packs](./future/epic-11-phase2-packs.md) | Expansion Packs | Medium |
+| [epic-etl-expansion-pack](./future/epic-etl-expansion-pack.md) | ETL Expansion Pack | Medium |
+
+### Phase 3-4: Core & Marketplace
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-12-phase3-core](./future/epic-12-phase3-core.md) | Core Enhancements | Low |
+| [epic-13-phase4-marketplace](./future/epic-13-phase4-marketplace.md) | Marketplace | Low |
+
+### Partner & Scaling
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-14-partners-onboarding](./future/epic-14-partners-onboarding.md) | Partners Onboarding | Low |
+| [epic-15-partner-os-mvp](./future/epic-15-partner-os-mvp.md) | Partner OS MVP | Low |
+| [epic-16-scale-100-partners](./future/epic-16-scale-100-partners.md) | Scale to 100 Partners | Low |
+
+### Infrastructure & Quality
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-s1-installer-foundation](./future/epic-s1-installer-foundation.md) | Installer Foundation | Medium |
+| [epic-s2-modular-architecture](./future/epic-s2-modular-architecture.md) | Modular Architecture | Medium |
+| [epic-s3-quality-templates](./future/epic-s3-quality-templates.md) | Quality Templates | Medium |
+| [epic-s4-devops-setup](./future/epic-s4-devops-setup.md) | DevOps Setup | Medium |
+| [epic-s4-stabilization](./future/epic-s4-stabilization.md) | Stabilization | Medium |
+| [epic-s5-documentation](./future/epic-s5-documentation.md) | Documentation | Medium |
+
+### i18n & Localization
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-7-i18n-core](./future/epic-7-i18n-core.md) | i18n Core | Low |
+| [epic-8-ptbr-display](./future/epic-8-ptbr-display.md) | PT-BR Display | Low |
+
+### Master Plan
+| Epic | Description | Priority |
+|------|-------------|----------|
+| [epic-master-aios-2.0](./future/epic-master-aios-2.0.md) | AIOS 2.0 Master Plan | Reference |
 
 ---
 
 ## 🔗 Quick Links
 
-### Stories por Sprint
-- [Sprint 1 Stories](../stories/v2.1/sprint-1/) - 12 stories
-- [Sprint 2 Stories](../stories/v2.1/sprint-2/) - 16 stories
-- [Sprint 3 Stories](../stories/v2.1/sprint-3/) - 12 stories
-- [Sprint 4 Stories](../stories/v2.1/sprint-4/) - 7 stories
-- [Sprint 5 Stories](../stories/v2.1/sprint-5/) - 6 stories
-
-### Auditorias & Investigações
-- [INSTALLER-HYBRID-V2-COMPLETE](../audits/INSTALLER-HYBRID-V2-COMPLETE.md)
-- [DECISION-4-QUALITY-GATES-INVESTIGATION](../audits/DECISION-4-QUALITY-GATES-INVESTIGATION-REPORT.md)
-- [ROUNDTABLE-TASK-FIRST-ANALYSIS](../audits/ROUNDTABLE-TASK-FIRST-CRITICAL-ANALYSIS-2025-01-19.md)
+- **Stories:** [../stories/](../stories/) - All development stories
+- **Standards:** [../standards/](../standards/) - AIOS standards
+- **Architecture:** [../architecture/](../architecture/) - Architecture docs
+- **Framework:** [../framework/](../framework/) - Framework specifications
 
 ---
 
-## ✅ Status Tracker
-
-| Epic | Stories | Points | Status | PO Review |
-|------|---------|--------|--------|-----------|
-| EPIC-S1 | 12 | 53 | 📋 Backlog | ⏳ Pending |
-| EPIC-S2 | 16 | 91 | 📋 Backlog | ⏳ Pending |
-| EPIC-S3 | 12 | 64 | 📋 Backlog | ⏳ Pending |
-| EPIC-S4 | 7 | 42 | 📋 Backlog | ⏳ Pending |
-| EPIC-S5 | 6 | 39 | 📋 Backlog | ⏳ Pending |
-
----
-
-## 🎊 Próximos Passos
-
-### 1. PO Review (Nova)
-- [ ] Revisar todos os 5 épicos
-- [ ] Validar objetivos e scope
-- [ ] Validar success criteria
-- [ ] Aprovar ou solicitar ajustes
-
-### 2. SM Finaliza Stories
-- [ ] Criar todas as 53 stories detalhadas
-- [ ] Validar com checklists
-- [ ] Preparar Sprint 1 kickoff
-
-### 3. Sprint 1 Kickoff
-- [ ] Team alignment
-- [ ] Story assignment
-- [ ] Sprint planning meeting
-- [ ] Start development! 🚀
-
----
-
-**Criado por:** River (SM - Facilitator) 🌊  
-**Data:** 2025-01-19  
-**Status:** ✅ Épicos completos, aguardando review do PO
-
+*Updated as part of Story 6.12 - Repository Cleanup for Open-Source Release*
