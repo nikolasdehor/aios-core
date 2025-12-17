@@ -289,11 +289,12 @@ async function main() {
     }
 
     // Step 2: Install AIOS CORE agents and tasks for Claude Code
+    // v2.1: Agents and tasks are in development/ module
     if (ides.includes('claude')) {
-      const coreAgentsSource = path.join(targetCoreDir, 'agents');
+      const coreAgentsSource = path.join(targetCoreDir, 'development', 'agents');
       const coreAgentsTarget = path.join(context.projectRoot, '.claude', 'commands', 'AIOS', 'agents');
 
-      const coreTasksSource = path.join(targetCoreDir, 'tasks');
+      const coreTasksSource = path.join(targetCoreDir, 'development', 'tasks');
       const coreTasksTarget = path.join(context.projectRoot, '.claude', 'commands', 'AIOS', 'tasks');
 
       if (fs.existsSync(coreAgentsSource)) {
@@ -325,8 +326,9 @@ See .aios-core/user-guide.md for complete documentation.
     }
 
     // Step 3: Install AIOS CORE agents for Cursor
+    // v2.1: Agents are in development/ module
     if (ides.includes('cursor')) {
-      const coreAgentsSource = path.join(targetCoreDir, 'agents');
+      const coreAgentsSource = path.join(targetCoreDir, 'development', 'agents');
       const cursorRulesTarget = path.join(context.projectRoot, '.cursor', 'rules', 'AIOS', 'agents');
 
       if (fs.existsSync(coreAgentsSource)) {
@@ -360,10 +362,11 @@ See .aios-core/user-guide.md for complete documentation.
     }
 
     // Step 4: Install AIOS CORE agents for other IDEs (Trae, Cline, Gemini, AntiGravity)
+    // v2.1: Agents are in development/ module
     const otherIdeInstalls = ['trae', 'cline', 'gemini', 'antigravity'];
     for (const ide of otherIdeInstalls) {
       if (ides.includes(ide)) {
-        const coreAgentsSource = path.join(targetCoreDir, 'agents');
+        const coreAgentsSource = path.join(targetCoreDir, 'development', 'agents');
         const ideRulesDir = ide === 'gemini' ? '.gemini' : `.${ide}`;
         const ideRulesTarget = path.join(context.projectRoot, ideRulesDir, 'rules', 'AIOS', 'agents');
 
@@ -385,8 +388,9 @@ See .aios-core/user-guide.md for complete documentation.
     }
 
     // Step 5: Install Roo Code modes
+    // v2.1: Agents are in development/ module
     if (ides.includes('roo')) {
-      const coreAgentsSource = path.join(targetCoreDir, 'agents');
+      const coreAgentsSource = path.join(targetCoreDir, 'development', 'agents');
       const rooModesPath = path.join(context.projectRoot, '.roomodes');
 
       if (fs.existsSync(coreAgentsSource)) {
@@ -412,8 +416,9 @@ See .aios-core/user-guide.md for complete documentation.
     }
 
     // Step 6: Install GitHub Copilot chat modes
+    // v2.1: Agents are in development/ module
     if (ides.includes('github-copilot')) {
-      const coreAgentsSource = path.join(targetCoreDir, 'agents');
+      const coreAgentsSource = path.join(targetCoreDir, 'development', 'agents');
       const copilotModesDir = path.join(context.projectRoot, '.github', 'chatmodes');
 
       if (fs.existsSync(coreAgentsSource)) {
