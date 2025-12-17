@@ -1,6 +1,6 @@
 {
   "name": "@synkra/aios-core",
-  "version": "2.1.6",
+  "version": "2.2.0",
   "description": "Synkra AIOS: AI-Orchestrated System for Full Stack Development - Core Framework",
   "main": "index.js",
   "module": "index.esm.js",
