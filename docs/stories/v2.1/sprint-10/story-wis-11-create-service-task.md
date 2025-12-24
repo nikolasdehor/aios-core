@@ -4,13 +4,13 @@
 <!-- Context: Core task for service scaffolding -->
 <!-- Created: 2025-12-23 by @sm (River) -->
 
-## Status: Draft
+## Status: Ready
 
 **Priority:** 🔴 HIGH
 **Sprint:** 10
 **Effort:** 6-8h
 **Lead:** @dev (Dex)
-**Approved by:** Pending @po validation
+**Approved by:** @po (Pax) - 2025-12-24
 
 ---
 
@@ -33,6 +33,22 @@ This story implements that task as an executable workflow for the @dev agent.
 |----------|---------|
 | `docs/architecture/wis-9-investigation-report.md` | Section 5.2: *create-service |
 | WIS-10 | Provides service-template/ |
+
+---
+
+## Dependencies
+
+### Blocked By
+- **WIS-10:** Service Template Implementation ✅ (provides Handlebars templates)
+- **WIS-9:** Investigation ✅ (provides task specification)
+
+### Blocks
+- **WIS-12:** `*create-integration` Task (extends this task with OAuth defaults)
+- **WIS-13:** `*extend-squad-tools` Task (uses similar pattern)
+
+### Related
+- **@dev agent:** Will receive new command
+- **IDE Sync:** Must run after agent update
 
 ---
 
@@ -218,6 +234,52 @@ elicit: true
 3. Verify TypeScript compiles
 4. Verify tests pass
 
+**Test Scenarios:**
+| Scenario | Input | Expected Output |
+|----------|-------|-----------------|
+| Happy path - API service | `my-api`, api-integration, auth=true | Complete service with client.ts |
+| Happy path - Utility | `my-util`, utility, auth=false | Service without client.ts |
+| Invalid name | `MyService` (PascalCase) | Validation error, re-prompt |
+| Duplicate name | existing service name | Error, suggest rename |
+| Cancel flow | Ctrl+C during elicitation | Clean exit, no partial files |
+
+---
+
+## Success Criteria
+
+1. `*create-service my-new-api` generates a fully functional service structure
+2. Generated TypeScript compiles with zero errors (`npm run build`)
+3. Generated tests pass (`npm test`)
+4. Command appears in `@dev *help` output
+5. IDE sync reflects new command in Claude Code, Cursor, Windsurf, Trae
+6. Service follows WIS-10 template structure exactly
+
+---
+
+## Non-Functional Requirements (NFR)
+
+### Performance
+| Metric | Target |
+|--------|--------|
+| Elicitation response time | < 100ms per prompt |
+| Template generation | < 2s for all files |
+| Total task execution | < 30s (excluding npm install) |
+
+### Security
+- [ ] No secrets hardcoded in generated files
+- [ ] Environment variables use `.env` pattern
+- [ ] Auth tokens never logged or exposed
+
+### Maintainability
+- [ ] Task file follows AIOS task format specification
+- [ ] Clear error messages for all failure modes
+- [ ] Extensible for future service types
+
+### Reliability
+- [ ] Atomic file generation (all or nothing)
+- [ ] Rollback on failure (delete partial files)
+- [ ] Graceful handling of disk space issues
+
 ---
 
 ## Change Log
@@ -225,3 +287,4 @@ elicit: true
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2025-12-23 | @sm (River) | Initial draft from WIS-9 investigation |
+| 1.1 | 2025-12-24 | @po (Pax) | PO Validation: APPROVED - Added Dependencies, Success Criteria, NFR, Test Scenarios |
