@@ -11,6 +11,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.9.0] - 2025-12-26
+
+### Highlights
+
+This release introduces **Squad Continuous Improvement** capabilities with analyze and extend commands, plus a massive codebase cleanup removing 116K+ lines of deprecated content.
+
+### Added
+
+#### Story SQS-11: Squad Analyze & Extend
+- **`*analyze-squad` command** - Analyze squad structure, coverage, and get improvement suggestions
+- **`*extend-squad` command** - Add new components (agents, tasks, workflows, etc.) incrementally
+- **New Scripts:**
+  - `squad-analyzer.js` - Inventory and coverage analysis
+  - `squad-extender.js` - Component creation with templates
+- **8 Component Templates:**
+  - `agent-template.md`, `task-template.md`, `workflow-template.yaml`
+  - `checklist-template.md`, `template-template.md`
+  - `tool-template.js`, `script-template.js`, `data-template.yaml`
+- **New Tasks:**
+  - `squad-creator-analyze.md`
+  - `squad-creator-extend.md`
+
+### Changed
+
+#### Story TD-1: Tech Debt Cleanup
+- Fixed ESLint warnings in 5 core files
+- Removed 284 deprecated files (~116,978 lines deleted)
+- Cleaned `.github/deprecated-docs/` directory
+- Removed obsolete backup files
+
+### Fixed
+- ESLint `_error` variable warnings in test utilities
+- Context loader error handling improvements
+
+---
+
+## [3.8.0] - 2025-12-26
+
+*Previous release with WIS and SQS features.*
+
+---
+
 ## [2.2.3] - 2025-12-22
 
 ### Highlights
