@@ -56,9 +56,22 @@ describe('security-utils', () => {
       expect(result.valid).toBe(true);
     });
 
-    it('should enforce basePath restriction', () => {
+    it('should enforce basePath restriction (traversal)', () => {
       const result = validatePath('../../outside', { basePath: '/safe/dir' });
       expect(result.valid).toBe(false);
+    });
+
+    it('should enforce basePath restriction (absolute escape)', () => {
+      // Use allowAbsolute + basePath to test basePath enforcement in isolation
+      // (without path traversal detection masking the basePath check)
+      const result = validatePath('/outside/secret.txt', {
+        basePath: '/safe/dir',
+        allowAbsolute: true,
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toEqual(
+        expect.arrayContaining([expect.stringContaining('escapes the allowed base')]),
+      );
     });
 
     it('should allow paths within basePath', () => {
@@ -271,20 +284,18 @@ describe('security-utils', () => {
       expect(limiter.check('user2').allowed).toBe(true);
     });
 
-    it('should clean up expired entries', () => {
-      const limiter = new RateLimiter({ maxRequests: 100, windowMs: 1 });
+    it('should clean up expired entries', async () => {
+      const limiter = new RateLimiter({ maxRequests: 1, windowMs: 1 });
 
       limiter.check('user1');
+      expect(limiter.check('user1').allowed).toBe(false);
 
-      // Wait for window to expire
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          limiter.cleanup();
-          // After cleanup, the map should be empty
-          expect(limiter.requests.size).toBe(0);
-          resolve();
-        }, 10);
-      });
+      // Wait for window to expire, then cleanup
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      limiter.cleanup();
+
+      // After cleanup, expired entry is removed so user1 can request again
+      expect(limiter.check('user1').allowed).toBe(true);
     });
   });
 
