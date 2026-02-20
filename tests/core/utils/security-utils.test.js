@@ -284,18 +284,23 @@ describe('security-utils', () => {
       expect(limiter.check('user2').allowed).toBe(true);
     });
 
-    it('should clean up expired entries', async () => {
-      const limiter = new RateLimiter({ maxRequests: 1, windowMs: 1 });
+    it('should clean up expired entries', () => {
+      jest.useFakeTimers();
+      try {
+        const limiter = new RateLimiter({ maxRequests: 1, windowMs: 60000 });
 
-      limiter.check('user1');
-      expect(limiter.check('user1').allowed).toBe(false);
+        limiter.check('user1');
+        expect(limiter.check('user1').allowed).toBe(false);
 
-      // Wait for window to expire, then cleanup
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      limiter.cleanup();
+        // Advance past the window and trigger cleanup
+        jest.advanceTimersByTime(60001);
+        limiter.cleanup();
 
-      // After cleanup, expired entry is removed so user1 can request again
-      expect(limiter.check('user1').allowed).toBe(true);
+        // After cleanup, expired entry is removed so user1 can request again
+        expect(limiter.check('user1').allowed).toBe(true);
+      } finally {
+        jest.useRealTimers();
+      }
     });
   });
 

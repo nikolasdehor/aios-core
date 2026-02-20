@@ -6,7 +6,7 @@
  * validateFieldTypes(), getMaxDepth(), autoFix(), fixIndentation(),
  * fixQuotes(), generateReport(), and validateYAML().
  *
- * Refs #52
+ * Refs #423
  */
 
 const yaml = require('js-yaml');
@@ -490,7 +490,7 @@ workflow:
 
     test('does not warn on nesting at exactly 10 levels', () => {
       let data = { level: 'bottom' };
-      for (let i = 0; i < 9; i++) {
+      for (let i = 0; i < 10; i++) {
         data = { nested: data };
       }
       const results = { valid: true, errors: [], warnings: [] };
