@@ -111,13 +111,14 @@ describe('AgentConfigCheck', () => {
   });
 
   describe('validateYaml', () => {
-    test('returns false for YAML with tabs', () => {
-      // When js-yaml is not available or throws, falls back to tab check
-      jest.mock('js-yaml', () => { throw new Error('not found'); }, { virtual: true });
-      const content = 'key:\n\tvalue: bad\n';
-      // This will either pass through js-yaml (if available) or fallback
-      const result = check.validateYaml(content);
-      expect(typeof result).toBe('boolean');
+    test('returns false for YAML with tab indentation', () => {
+      const result = check.validateYaml('key:\n\tvalue: bad\n');
+      expect(result).toBe(false);
+    });
+
+    test('returns true for valid YAML', () => {
+      const result = check.validateYaml('name: agent\nversion: 1\n');
+      expect(result).toBe(true);
     });
   });
 });
