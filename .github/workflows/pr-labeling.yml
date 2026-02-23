@@ -1,8 +1,10 @@
 name: PR Labeling
 # Story 6.1 - Added concurrency
+# Fix #479 - use pull_request_target so the GITHUB_TOKEN has write
+# permissions even for PRs from forks.
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize]
 
 concurrency:
@@ -28,12 +30,16 @@ jobs:
 
       - name: Check for squad changes
         id: check-squad
-        run: |
-          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "^squads/"; then
-            echo "has_squad=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_squad=false" >> $GITHUB_OUTPUT
-          fi
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            const hasSquad = files.some(f => f.filename.startsWith('squads/'));
+            core.setOutput('has_squad', hasSquad ? 'true' : 'false');
 
       - name: Add needs-po-review label for squad PRs
         if: steps.check-squad.outputs.has_squad == 'true'
@@ -41,9 +47,8 @@ jobs:
         with:
           script: |
             github.rest.issues.addLabels({
-              issue_number: context.issue.number,
+              issue_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               labels: ['needs-po-review']
             })
-
