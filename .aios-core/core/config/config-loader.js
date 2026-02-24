@@ -221,8 +221,11 @@ function clearCache() {
 function getPerformanceMetrics() {
   return {
     ...performanceMetrics,
-    cacheHitRate: performanceMetrics.loads > 0
-      ? ((performanceMetrics.cacheHits / performanceMetrics.loads) * 100).toFixed(1) + '%'
+    // Use total requests (hits + misses) as denominator, not just disk loads.
+    // `loads` only counts file reads (≈ cache misses), so the old formula
+    // could exceed 100% and was misleading (fixes #499).
+    cacheHitRate: (performanceMetrics.cacheHits + performanceMetrics.cacheMisses) > 0
+      ? ((performanceMetrics.cacheHits / (performanceMetrics.cacheHits + performanceMetrics.cacheMisses)) * 100).toFixed(1) + '%'
       : '0%',
     avgLoadTimeMs: Math.round(performanceMetrics.avgLoadTime),
   };
