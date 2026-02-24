@@ -189,7 +189,13 @@ describe('SkillDispatcher', () => {
       expect(payload.args).toContain('--has-frontend');
       expect(payload.args).toContain('--frontend="react"');
       expect(payload.args).toContain('--typescript');
-      expect(payload.context.techStack).toBeDefined();
+      expect(payload.context.techStack).toEqual({
+        hasDatabase: true,
+        database: { type: 'postgresql' },
+        hasFrontend: true,
+        frontend: { framework: 'react' },
+        hasTypeScript: true,
+      });
     });
 
     test('omits tech stack flags when no profile', () => {
@@ -262,11 +268,11 @@ describe('SkillDispatcher', () => {
       expect(result.timestamp).toBe('2025-01-01T00:00:00Z');
     });
 
-    test('adds timestamp to structured object if missing', () => {
+    test('adds valid ISO timestamp to structured object if missing', () => {
       const input = { status: 'success', summary: 'Done' };
       const result = dispatcher.parseSkillOutput(input);
       expect(result.timestamp).toBeDefined();
-      expect(result.timestamp).not.toBe('2025-01-01T00:00:00Z');
+      expect(Number.isNaN(Date.parse(result.timestamp))).toBe(false);
     });
 
     test('extracts JSON from markdown code block', () => {
@@ -447,6 +453,11 @@ describe('SkillDispatcher', () => {
     test('returns false for unknown non-AIOS agents', () => {
       expect(dispatcher.isValidAgent('random-agent')).toBe(false);
       expect(dispatcher.isValidAgent('')).toBe(false);
+    });
+
+    test('handles null and undefined without throwing', () => {
+      expect(dispatcher.isValidAgent(null)).toBe(false);
+      expect(dispatcher.isValidAgent(undefined)).toBe(false);
     });
   });
 });
