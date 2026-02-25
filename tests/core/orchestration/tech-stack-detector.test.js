@@ -54,10 +54,10 @@ describe('TechStackDetector', () => {
 
     test('detects full stack project', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('package.json')) return true;
-        if (p.endsWith('tsconfig.json')) return true;
-        if (p.endsWith('tests')) return true;
-        return false;
+        if (p.endsWith('package.json')) return Promise.resolve(true);
+        if (p.endsWith('tsconfig.json')) return Promise.resolve(true);
+        if (p.endsWith('tests')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
       fs.readJson.mockResolvedValue({
         dependencies: {
@@ -98,9 +98,9 @@ describe('TechStackDetector', () => {
   describe('database detection', () => {
     test('detects Supabase from directory', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('supabase')) return true;
-        if (p.includes('migrations')) return true;
-        return false;
+        if (p.endsWith('supabase')) return Promise.resolve(true);
+        if (p.includes('migrations')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
       fs.readdir.mockResolvedValue(['001_init.sql']);
       fs.readFile.mockResolvedValue('CREATE TABLE users; ENABLE ROW LEVEL SECURITY;');
@@ -115,9 +115,9 @@ describe('TechStackDetector', () => {
 
     test('detects Prisma from directory', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('prisma')) return true;
-        if (p.endsWith('schema.prisma')) return true;
-        return false;
+        if (p.endsWith('prisma')) return Promise.resolve(true);
+        if (p.endsWith('schema.prisma')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
 
       const profile = await detector.detect();
@@ -128,7 +128,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects MongoDB from deps', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { mongoose: '^7.0.0' },
       });
@@ -140,7 +140,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects MySQL from deps', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { mysql2: '^3.0.0' },
       });
@@ -152,7 +152,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects SQLite from deps', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { 'better-sqlite3': '^9.0.0' },
       });
@@ -164,7 +164,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Supabase from deps', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { '@supabase/supabase-js': '^2.0.0' },
       });
@@ -176,9 +176,9 @@ describe('TechStackDetector', () => {
 
     test('detects env vars from .env file', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('package.json')) return true;
-        if (p.endsWith('.env')) return true;
-        return false;
+        if (p.endsWith('package.json')) return Promise.resolve(true);
+        if (p.endsWith('.env')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
       fs.readJson.mockResolvedValue({
         dependencies: { pg: '^8.0.0' },
@@ -196,7 +196,7 @@ describe('TechStackDetector', () => {
   // ============================================================
   describe('frontend detection', () => {
     test('detects React', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18.0.0' },
       });
@@ -208,7 +208,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Vue', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { vue: '^3.0.0' },
       });
@@ -219,7 +219,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Angular', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { '@angular/core': '^17.0.0' },
       });
@@ -230,7 +230,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Svelte', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { svelte: '^4.0.0' },
       });
@@ -241,7 +241,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Next.js as React', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { next: '^14.0.0' },
       });
@@ -252,7 +252,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Nuxt as Vue', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { nuxt: '^3.0.0' },
       });
@@ -263,7 +263,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects build tools', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18', webpack: '^5' },
       });
@@ -273,7 +273,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects styled-components', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18', 'styled-components': '^6' },
       });
@@ -283,7 +283,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects emotion styling', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18', '@emotion/react': '^11' },
       });
@@ -293,7 +293,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects scss styling', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18' },
         devDependencies: { sass: '^1.0' },
@@ -305,9 +305,9 @@ describe('TechStackDetector', () => {
 
     test('detects shadcn from ui directory', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('package.json')) return true;
-        if (p.includes('src/components/ui')) return true;
-        return false;
+        if (p.endsWith('package.json')) return Promise.resolve(true);
+        if (p.includes('src/components/ui')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18' },
@@ -318,7 +318,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects MUI component library', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18', '@mui/material': '^5' },
       });
@@ -329,8 +329,8 @@ describe('TechStackDetector', () => {
 
     test('detects frontend from .jsx files in src', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('src')) return true;
-        return false;
+        if (p.endsWith('src')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
       fs.readdir.mockResolvedValue(['App.jsx', 'index.js']);
 
@@ -344,7 +344,7 @@ describe('TechStackDetector', () => {
   // ============================================================
   describe('backend detection', () => {
     test('detects Express', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { express: '^4.0.0' },
       });
@@ -356,7 +356,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Fastify', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { fastify: '^4.0.0' },
       });
@@ -366,7 +366,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects NestJS', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { '@nestjs/core': '^10.0.0' },
       });
@@ -376,7 +376,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects Hono', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { hono: '^4.0.0' },
       });
@@ -387,8 +387,8 @@ describe('TechStackDetector', () => {
 
     test('detects edge functions', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.includes('supabase/functions')) return true;
-        return false;
+        if (p.includes('supabase/functions')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
 
       const profile = await detector.detect();
@@ -398,9 +398,9 @@ describe('TechStackDetector', () => {
 
     test('detects API routes', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('package.json')) return true;
-        if (p.endsWith('src/api')) return true;
-        return false;
+        if (p.endsWith('package.json')) return Promise.resolve(true);
+        if (p.endsWith('src/api')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
       fs.readJson.mockResolvedValue({
         dependencies: { express: '^4' },
@@ -416,7 +416,7 @@ describe('TechStackDetector', () => {
   // ============================================================
   describe('typescript detection', () => {
     test('detects from dependency', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         devDependencies: { typescript: '^5.0.0' },
       });
@@ -426,7 +426,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects from tsconfig.json', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('tsconfig.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('tsconfig.json')));
 
       const profile = await detector.detect();
       expect(profile.hasTypeScript).toBe(true);
@@ -438,7 +438,7 @@ describe('TechStackDetector', () => {
   // ============================================================
   describe('test detection', () => {
     test('detects from test framework dep', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         devDependencies: { vitest: '^1.0.0' },
       });
@@ -448,7 +448,7 @@ describe('TechStackDetector', () => {
     });
 
     test('detects from test directory', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('tests'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('tests')));
 
       const profile = await detector.detect();
       expect(profile.hasTests).toBe(true);
@@ -465,7 +465,7 @@ describe('TechStackDetector', () => {
     });
 
     test('phase 2 only with database', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { pg: '^8' },
       });
@@ -475,7 +475,7 @@ describe('TechStackDetector', () => {
     });
 
     test('phase 3 only with frontend', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18' },
       });
@@ -503,12 +503,12 @@ describe('TechStackDetector', () => {
 
     test('confidence caps at 100', async () => {
       fs.pathExists.mockImplementation((p) => {
-        if (p.endsWith('package.json')) return true;
-        if (p.endsWith('tsconfig.json')) return true;
-        if (p.endsWith('tests')) return true;
-        if (p.includes('src/components/ui')) return true;
-        if (p.endsWith('.env')) return true;
-        return false;
+        if (p.endsWith('package.json')) return Promise.resolve(true);
+        if (p.endsWith('tsconfig.json')) return Promise.resolve(true);
+        if (p.endsWith('tests')) return Promise.resolve(true);
+        if (p.includes('src/components/ui')) return Promise.resolve(true);
+        if (p.endsWith('.env')) return Promise.resolve(true);
+        return Promise.resolve(false);
       });
       fs.readJson.mockResolvedValue({
         dependencies: {
@@ -583,7 +583,7 @@ describe('TechStackDetector', () => {
   // ============================================================
   describe('package.json caching', () => {
     test('caches package.json across detectors', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockResolvedValue({
         dependencies: { react: '^18', express: '^4' },
       });
@@ -594,7 +594,7 @@ describe('TechStackDetector', () => {
     });
 
     test('handles corrupt package.json', async () => {
-      fs.pathExists.mockImplementation((p) => p.endsWith('package.json'));
+      fs.pathExists.mockImplementation((p) => Promise.resolve(p.endsWith('package.json')));
       fs.readJson.mockRejectedValue(new Error('parse error'));
 
       const profile = await detector.detect();

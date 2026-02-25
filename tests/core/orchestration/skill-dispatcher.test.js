@@ -426,6 +426,7 @@ describe('SkillDispatcher', () => {
 
     test('returns expected count of primary agents', () => {
       const agents = dispatcher.getAvailableAgents();
+      // Intentional: update this count when adding/removing primary agents
       expect(agents).toHaveLength(11);
     });
   });

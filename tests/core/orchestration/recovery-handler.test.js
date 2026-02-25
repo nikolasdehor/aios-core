@@ -380,11 +380,10 @@ describe('RecoveryHandler', () => {
 
     test('catches errors during strategy execution', async () => {
       handler.orchestrator = {
-        // Force an error in ESCALATE by providing a bad orchestrator._log
         _log: jest.fn(),
       };
 
-      // Mock fs to throw during escalation report save
+      // Force an error during escalation report save (fs.ensureDir rejects)
       fs.ensureDir.mockRejectedValueOnce(new Error('disk full'));
 
       const result = await handler._executeRecoveryStrategy(

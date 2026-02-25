@@ -403,85 +403,62 @@ describe('SurfaceChecker', () => {
   // ============================================================
   // Helper Methods
   // ============================================================
+  // Shared factory for helper method tests
+  function loadedChecker(criteria = MOCK_CRITERIA) {
+    const checker = new SurfaceChecker();
+    checker.criteria = criteria;
+    checker._loaded = true;
+    return checker;
+  }
+
   describe('getActionConfig', () => {
-    let checker;
-
-    beforeEach(() => {
-      checker = new SurfaceChecker();
-      checker.criteria = MOCK_CRITERIA;
-      checker._loaded = true;
-    });
-
     test('returns action config when found', () => {
-      const config = checker.getActionConfig('confirm_cost');
+      const config = loadedChecker().getActionConfig('confirm_cost');
       expect(config.type).toBe('confirm');
       expect(config.timeout_seconds).toBe(120);
     });
 
     test('returns null for unknown action', () => {
-      expect(checker.getActionConfig('unknown')).toBeNull();
+      expect(loadedChecker().getActionConfig('unknown')).toBeNull();
     });
 
     test('returns null when criteria not loaded', () => {
-      checker.criteria = null;
-      expect(checker.getActionConfig('confirm_cost')).toBeNull();
+      expect(loadedChecker(null).getActionConfig('confirm_cost')).toBeNull();
     });
   });
 
   describe('getCriteria', () => {
     test('returns criteria definitions', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = MOCK_CRITERIA;
-      checker._loaded = true;
-
-      const criteria = checker.getCriteria();
+      const criteria = loadedChecker().getCriteria();
       expect(criteria.cost_threshold).toBeDefined();
       expect(criteria.high_risk).toBeDefined();
     });
 
     test('returns empty object when no criteria', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = null;
-      checker._loaded = true;
-
-      expect(checker.getCriteria()).toEqual({});
+      expect(loadedChecker(null).getCriteria()).toEqual({});
     });
   });
 
   describe('getDestructiveActions', () => {
     test('returns destructive actions list', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = MOCK_CRITERIA;
-      checker._loaded = true;
-
-      const actions = checker.getDestructiveActions();
+      const actions = loadedChecker().getDestructiveActions();
       expect(actions).toEqual(['delete', 'drop', 'reset', 'force-push']);
     });
 
     test('returns empty array when no criteria', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = null;
-      checker._loaded = true;
-
-      expect(checker.getDestructiveActions()).toEqual([]);
+      expect(loadedChecker(null).getDestructiveActions()).toEqual([]);
     });
   });
 
   describe('isDestructiveAction', () => {
     test('returns true for destructive actions', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = MOCK_CRITERIA;
-      checker._loaded = true;
-
+      const checker = loadedChecker();
       expect(checker.isDestructiveAction('delete')).toBe(true);
       expect(checker.isDestructiveAction('force-push')).toBe(true);
     });
 
     test('returns false for non-destructive actions', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = MOCK_CRITERIA;
-      checker._loaded = true;
-
+      const checker = loadedChecker();
       expect(checker.isDestructiveAction('create')).toBe(false);
       expect(checker.isDestructiveAction('read')).toBe(false);
     });
@@ -489,20 +466,11 @@ describe('SurfaceChecker', () => {
 
   describe('getMetadata', () => {
     test('returns metadata from criteria', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = MOCK_CRITERIA;
-      checker._loaded = true;
-
-      const meta = checker.getMetadata();
-      expect(meta.author).toBe('test');
+      expect(loadedChecker().getMetadata().author).toBe('test');
     });
 
     test('returns empty object when no criteria', () => {
-      const checker = new SurfaceChecker();
-      checker.criteria = null;
-      checker._loaded = true;
-
-      expect(checker.getMetadata()).toEqual({});
+      expect(loadedChecker(null).getMetadata()).toEqual({});
     });
   });
 

@@ -22,6 +22,10 @@ describe('ParallelExecutor', () => {
     executor = new ParallelExecutor();
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   // ============================================================
   // Constructor
   // ============================================================

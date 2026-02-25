@@ -130,7 +130,7 @@ describe('AgentInvoker', () => {
 
       const result = await invoker.invokeAgent('dev', 'nonexistent-task');
 
-      // Agent also not found since pathExists returns false
+      // Agent file unloaded (pathExists = false) and task doesn't exist
       expect(result.success).toBe(false);
     });
 
@@ -436,7 +436,7 @@ describe('AgentInvoker', () => {
       const logs = invoker.getLogs();
       logs.push({ fake: true });
 
-      expect(invoker.logs.length).toBeLessThan(logs.length);
+      expect(invoker.logs).not.toContainEqual({ fake: true });
     });
   });
 });

@@ -110,7 +110,7 @@ describe('DashboardIntegration', () => {
       await dashboard.start();
       await dashboard.start();
 
-      // ensureDir should only be called once (from first start)
+      // ensureDir called twice (2 dirs) only from first start(); second call is no-op
       expect(fs.ensureDir).toHaveBeenCalledTimes(2);
     });
 

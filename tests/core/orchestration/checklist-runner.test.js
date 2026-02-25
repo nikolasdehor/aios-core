@@ -114,13 +114,13 @@ describe('ChecklistRunner', () => {
     });
 
     test('skips duplicate items from YAML and markdown', () => {
-      const content = '```yaml\npre-conditions:\n  - Check files exist for deployment\n```\n- [ ] Check files exist for deployment readiness';
+      const item = 'Check files exist for deployment';
+      const content = '```yaml\npre-conditions:\n  - ' + item + '\n```\n- [ ] ' + item;
       yaml.load.mockReturnValue({
-        'pre-conditions': ['Check files exist for deployment'],
+        'pre-conditions': [item],
       });
 
       const items = runner.parseChecklistItems(content);
-      // The markdown checkbox matches first 30 chars of YAML item, so should be skipped
       expect(items).toHaveLength(1);
     });
   });

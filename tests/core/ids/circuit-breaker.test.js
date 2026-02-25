@@ -230,7 +230,8 @@ describe('CircuitBreaker', () => {
       breaker.isAllowed();
       expect(breaker.getState()).toBe(STATE_HALF_OPEN);
 
-      // 4. Success probe closes circuit
+      // 4. Simulate 3 consecutive successful probes by resetting the
+      // half-open probe flag between successes
       breaker.recordSuccess();
       breaker._halfOpenProbeInFlight = true;
       breaker.recordSuccess();
