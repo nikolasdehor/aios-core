@@ -781,6 +781,8 @@ class BuildStateManager {
       throw new Error('No state loaded');
     }
 
+    this._state.failedAttempts ??= [];
+
     const failure = {
       subtaskId,
       attempt:
@@ -831,7 +833,7 @@ class BuildStateManager {
     }
 
     // Get attempts for this subtask
-    const attempts = this._state.failedAttempts
+    const attempts = (this._state.failedAttempts || [])
       .filter((f) => f.subtaskId === subtaskId)
       .map((f) => ({
         success: false,
@@ -895,7 +897,7 @@ class BuildStateManager {
    */
   getNotifications() {
     if (!this._state) return [];
-    return this._state.notifications.filter((n) => !n.acknowledged);
+    return (this._state.notifications || []).filter((n) => !n.acknowledged);
   }
 
   /**
@@ -904,7 +906,7 @@ class BuildStateManager {
    * @param {number} index - Notification index
    */
   acknowledgeNotification(index) {
-    if (!this._state || !this._state.notifications[index]) return;
+    if (!this._state || !this._state.notifications || !this._state.notifications[index]) return;
     this._state.notifications[index].acknowledged = true;
     this.saveState();
   }
