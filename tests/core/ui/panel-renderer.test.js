@@ -53,7 +53,8 @@ describe('panel-renderer', () => {
   describe('horizontalLine', () => {
     test('creates line of correct length', () => {
       const line = renderer.horizontalLine(10);
-      expect(line).toBe('─'.repeat(8));
+      // 10 - 2 (border chars) = 8 fill characters
+      expect(line).toBe('─'.repeat(10 - 2));
     });
   });
 
@@ -152,6 +153,20 @@ describe('panel-renderer', () => {
   });
 
   describe('renderMinimal', () => {
+    function buildMockState(overrides = {}) {
+      return {
+        pipeline: {
+          stages: ['Plan', 'Dev'],
+          completed_stages: ['Plan'],
+          current_stage: 'Dev',
+        },
+        current_agent: { id: 'dev', task: 'coding' },
+        active_terminals: { count: 1, list: [{ agent: 'dev' }] },
+        elapsed: { story_start: Date.now() - 10000, session_start: Date.now() - 20000 },
+        errors: [],
+        ...overrides,
+      };
+    }
     const mockState = {
       pipeline: {
         stages: ['Plan', 'Dev'],
@@ -210,6 +225,7 @@ describe('panel-renderer', () => {
 
     test('renders detailed panel with all sections', () => {
       const output = renderer.stripAnsi(renderer.renderDetailed(mockState));
+      // "Modo Educativo" é o label real do source (pt-BR hardcoded)
       expect(output).toContain('Modo Educativo');
       expect(output).toContain('Pipeline');
       expect(output).toContain('Current Agent');

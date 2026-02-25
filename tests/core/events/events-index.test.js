@@ -9,7 +9,7 @@
 'use strict';
 
 jest.mock('../../../.aios-core/core/events/types', () => ({
-  DashboardEventType: { AGENT_START: 'agent:start', TASK_COMPLETE: 'task:complete' },
+  DashboardEventType: { AGENT_ACTIVATED: 'AgentActivated', COMMAND_START: 'CommandStart' },
 }));
 jest.mock('../../../.aios-core/core/events/dashboard-emitter', () => ({
   DashboardEmitter: class DashboardEmitter {},
@@ -48,13 +48,13 @@ describe('events/index facade', () => {
     });
 
     it('should contain expected event type keys', () => {
-      expect(eventsIndex.DashboardEventType).toHaveProperty('AGENT_START');
-      expect(eventsIndex.DashboardEventType).toHaveProperty('TASK_COMPLETE');
+      expect(eventsIndex.DashboardEventType).toHaveProperty('AGENT_ACTIVATED');
+      expect(eventsIndex.DashboardEventType).toHaveProperty('COMMAND_START');
     });
 
     it('should have string values for event types', () => {
-      expect(typeof eventsIndex.DashboardEventType.AGENT_START).toBe('string');
-      expect(typeof eventsIndex.DashboardEventType.TASK_COMPLETE).toBe('string');
+      expect(typeof eventsIndex.DashboardEventType.AGENT_ACTIVATED).toBe('string');
+      expect(typeof eventsIndex.DashboardEventType.COMMAND_START).toBe('string');
     });
   });
 

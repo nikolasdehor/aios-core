@@ -10,8 +10,8 @@ jest.mock('../../../.aios-core/core/ui/observability-panel', () => ({
 
 jest.mock('../../../.aios-core/core/ui/panel-renderer', () => ({
   PanelRenderer: class PanelRenderer {},
-  BOX: { TOP_LEFT: '+' },
-  STATUS: { OK: 'ok' },
+  BOX: { topLeft: '┌', horizontal: '─' },
+  STATUS: { completed: '✓', error: '✗' },
 }));
 
 const uiIndex = require('../../../.aios-core/core/ui/index');

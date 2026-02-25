@@ -41,6 +41,7 @@ describe('events/types', () => {
       expect(DashboardEventType.BOB_ERROR).toBe('BobError');
     });
 
+    // Contagem exata: 8 core + 5 Bob events = 13
     test('has exactly 13 event types', () => {
       expect(Object.keys(DashboardEventType)).toHaveLength(13);
     });
