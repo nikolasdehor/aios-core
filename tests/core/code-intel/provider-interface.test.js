@@ -28,19 +28,8 @@ describe('CAPABILITIES', () => {
     expect(CAPABILITIES).toHaveLength(8);
   });
 
-  it.each([
-    'findDefinition',
-    'findReferences',
-    'findCallers',
-    'findCallees',
-    'analyzeDependencies',
-    'analyzeComplexity',
-    'analyzeCodebase',
-    'getProjectStats',
-  ])('should include "%s"', (cap) => {
-    expect(CAPABILITIES).toContain(cap);
-  });
-
+  // toEqual already asserts exact membership and order; individual membership
+  // checks via it.each would be redundant.
   it('should contain only the expected capabilities in order', () => {
     expect(CAPABILITIES).toEqual([
       'findDefinition',

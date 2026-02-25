@@ -47,7 +47,7 @@ jest.mock('../../../.aios-core/core/code-intel/providers/provider-interface', ()
 
 jest.mock('../../../.aios-core/core/code-intel/providers/code-graph-provider', () => ({
   CodeGraphProvider: class CodeGraphProvider {},
-  TOOL_MAP: { find_definition: 'findDefinition', find_references: 'findReferences' },
+  TOOL_MAP: { findDefinition: 'find_definition', findReferences: 'find_references' },
 }));
 
 // ---- Require after mocks ----
@@ -72,7 +72,13 @@ describe('code-intel/index', () => {
   beforeEach(() => {
     _resetForTesting();
     jest.clearAllMocks();
+    // Re-configure defaults to prevent cross-test mock leaks
     mockClient.isCodeIntelAvailable.mockReturnValue(false);
+    mockEnricherInstance.assessImpact.mockResolvedValue(null);
+    mockEnricherInstance.detectDuplicates.mockResolvedValue(null);
+    mockEnricherInstance.findTests.mockResolvedValue(null);
+    mockEnricherInstance.getConventions.mockResolvedValue(null);
+    mockEnricherInstance.describeProject.mockResolvedValue(null);
   });
 
   // --------------------------------------------------
@@ -106,7 +112,8 @@ describe('code-intel/index', () => {
 
     test('exports TOOL_MAP object', () => {
       expect(typeof TOOL_MAP).toBe('object');
-      expect(TOOL_MAP.find_definition).toBe('findDefinition');
+      // Keys são capability names, values são MCP tool names
+      expect(TOOL_MAP.findDefinition).toBe('find_definition');
     });
   });
 
@@ -377,6 +384,7 @@ describe('code-intel/index', () => {
     });
 
     test('respects custom timeout and rejects slow capabilities', async () => {
+      jest.useFakeTimers();
       mockClient.isCodeIntelAvailable.mockReturnValue(true);
       getClient();
 
@@ -384,17 +392,17 @@ describe('code-intel/index', () => {
         () => new Promise(() => {}),
       );
 
-      const start = Date.now();
-      const result = await enrichWithCodeIntel(baseResult, {
+      const resultPromise = enrichWithCodeIntel(baseResult, {
         capabilities: ['assessImpact'],
         files: ['a.js'],
         timeout: 50,
       });
-      const elapsed = Date.now() - start;
+
+      await jest.advanceTimersByTimeAsync(51);
+      const result = await resultPromise;
 
       expect(result._codeIntel.assessImpact).toBeUndefined();
-      expect(elapsed).toBeGreaterThanOrEqual(40);
-      expect(elapsed).toBeLessThan(3000);
+      jest.useRealTimers();
     });
 
     test('successful capability resolves before timeout', async () => {

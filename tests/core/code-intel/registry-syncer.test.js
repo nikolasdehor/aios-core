@@ -54,7 +54,8 @@ const { RegistryLoader } = require('../../../.aios-core/core/ids/registry-loader
 
 const { RegistrySyncer, inferRole, ROLE_MAP } = require('../../../.aios-core/core/code-intel/registry-syncer');
 
-jest.setTimeout(30000);
+// Default 5s is sufficient; all I/O is mocked
+jest.setTimeout(5000);
 
 // --- Helpers ---
 
@@ -512,6 +513,8 @@ describe('_findUsedBy', () => {
     expect(result).toEqual(['entity-b']);
   });
 
+  // null elements cause TypeError on property access (null.file), returning null.
+  // Non-null non-string items (e.g. 42) are skipped gracefully by the filter.
   it('should return null when references contain null (property access error)', async () => {
     client.findReferences.mockResolvedValue([42, null, { noFileOrPath: true }]);
     const result = await syncer._findUsedBy(client, 'entity-a', {});

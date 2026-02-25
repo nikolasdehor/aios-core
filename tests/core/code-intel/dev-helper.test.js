@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Dev Helper Tests
  *
@@ -44,7 +46,13 @@ const {
 describe('Dev Helper Module', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Re-configure defaults to prevent cross-test mock leaks
     isCodeIntelAvailable.mockReturnValue(false);
+    mockClient.findDefinition.mockResolvedValue(null);
+    mockClient.findReferences.mockResolvedValue([]);
+    mockEnricher.detectDuplicates.mockResolvedValue(null);
+    mockEnricher.getConventions.mockResolvedValue(null);
+    mockEnricher.assessImpact.mockResolvedValue(null);
   });
 
   // --- Constants ---
