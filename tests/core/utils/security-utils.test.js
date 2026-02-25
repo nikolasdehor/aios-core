@@ -224,7 +224,7 @@ describe('security-utils', () => {
 
   describe('RateLimiter', () => {
     it('should allow requests under the limit', () => {
-      const limiter = new RateLimiter({ maxRequests: 3, windowMs: 1000 });
+      const limiter = new RateLimiter({ maxRequests: 3, windowMs: 60000 });
 
       expect(limiter.check('user1').allowed).toBe(true);
       expect(limiter.check('user1').allowed).toBe(true);

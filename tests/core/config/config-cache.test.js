@@ -9,6 +9,10 @@ jest.useFakeTimers();
 
 const { ConfigCache, globalConfigCache } = require('../../../.aios-core/core/config/config-cache');
 
+afterAll(() => {
+  jest.useRealTimers();
+});
+
 describe('config-cache', () => {
   let cache;
 

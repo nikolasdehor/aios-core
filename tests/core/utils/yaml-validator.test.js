@@ -216,6 +216,8 @@ workflow:
       expect(result.valid).toBe(false);
       expect(result.errors[0].type).toBe('parse_error');
       expect(result.errors[0].message).toBeTruthy();
+      // js-yaml inclui posição no message quando disponível
+      expect(typeof result.errors[0].message).toBe('string');
     });
   });
 
@@ -488,7 +490,9 @@ workflow:
       expect(deepWarnings[0].depth).toBeGreaterThan(10);
     });
 
-    test('does not warn on nesting at exactly 10 levels', () => {
+    test('does not warn on nesting at exactly 10 levels (boundary)', () => {
+      // getMaxDepth({ level: 'bottom' }) = 0; cada wrap adiciona +1
+      // 10 wraps = depth 10; threshold é > 10, então 10 não aciona warning
       let data = { level: 'bottom' };
       for (let i = 0; i < 10; i++) {
         data = { nested: data };
@@ -583,9 +587,8 @@ workflow:
       const badContent = '  key: value with: colon';
       const result = await validator.autoFix(badContent);
 
-      // fixQuotes should quote "value with: colon" since it contains ':'
-      // Whether changed depends on actual transformation
-      expect(typeof result.changed).toBe('boolean');
+      // fixQuotes deve quotar "value with: colon" (contém ':')
+      expect(result.changed).toBe(true);
       expect(result.content).toBeDefined();
       expect(result.validation).toBeDefined();
     });

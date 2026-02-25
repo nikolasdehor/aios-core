@@ -34,10 +34,14 @@ const {
 describe('config-loader', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.spyOn(console, 'log').mockImplementation();
-    jest.spyOn(console, 'error').mockImplementation();
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     // Clear cache between tests
     clearCache();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   // ============================================================

@@ -96,6 +96,7 @@ describe('env-interpolator', () => {
       const config = { hosts: ['${HOST_1}', 'static'] };
       const findings = lintEnvPatterns(config, 'test.yaml');
       expect(findings).toHaveLength(1);
+      expect(findings[0]).toContain('HOST_1');
     });
 
     test('returns empty for config without patterns', () => {
