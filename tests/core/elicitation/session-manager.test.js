@@ -19,9 +19,10 @@ describe('ElicitationSessionManager', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.spyOn(console, 'warn').mockImplementation();
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
     fs.ensureDir.mockResolvedValue();
     fs.writeJson.mockResolvedValue();
+    fs.move.mockResolvedValue();
     manager = new ElicitationSessionManager('/test/sessions');
   });
 

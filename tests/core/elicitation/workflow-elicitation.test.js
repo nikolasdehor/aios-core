@@ -12,9 +12,9 @@ describe('workflow-elicitation', () => {
   // Structure
   // ============================================================
   describe('structure', () => {
-    test('exports an array of steps', () => {
+    test('exports an array of 9 steps', () => {
       expect(Array.isArray(workflowElicitationSteps)).toBe(true);
-      expect(workflowElicitationSteps.length).toBeGreaterThan(0);
+      expect(workflowElicitationSteps).toHaveLength(9);
     });
 
     test('each step has title and description', () => {

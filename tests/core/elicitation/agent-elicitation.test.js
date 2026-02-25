@@ -32,6 +32,10 @@ describe('agent-elicitation', () => {
   describe('Basic Agent Information', () => {
     const step = agentElicitationSteps[0];
 
+    test('step identity: Basic Agent Information', () => {
+      expect(step.title).toContain('Agent');
+    });
+
     test('agentName validation rejects empty', () => {
       const q = step.questions.find(q => q.name === 'agentName');
       expect(q.validate('')).toContain('required');
@@ -142,9 +146,10 @@ describe('agent-elicitation', () => {
       expect(q.when({ dependencyTypes: ['data'] })).toBe(false);
     });
 
-    test('templateDependencies filter handles empty', () => {
+    test('templateDependencies filter handles empty and non-empty', () => {
       const q = step.questions.find(q => q.name === 'templateDependencies');
       expect(q.filter('')).toEqual([]);
+      expect(q.filter('tmpl1.md, tmpl2.md')).toEqual(['tmpl1.md', 'tmpl2.md']);
     });
   });
 

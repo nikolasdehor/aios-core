@@ -12,9 +12,9 @@ describe('task-elicitation', () => {
   // Structure
   // ============================================================
   describe('structure', () => {
-    test('exports an array of steps', () => {
+    test('exports an array of 7 steps', () => {
       expect(Array.isArray(taskElicitationSteps)).toBe(true);
-      expect(taskElicitationSteps.length).toBeGreaterThan(0);
+      expect(taskElicitationSteps).toHaveLength(7);
     });
 
     test('each step has title and description', () => {
@@ -142,6 +142,7 @@ describe('task-elicitation', () => {
     });
 
     test('custom validator returns true', () => {
+      expect(step.validators.length).toBeGreaterThan(0);
       const validator = step.validators[0];
       expect(validator.validate({})).toBe(true);
     });
