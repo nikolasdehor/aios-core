@@ -397,7 +397,7 @@ class BuildStateManager {
    * @returns {Object|null} Last checkpoint or null
    */
   getLastCheckpoint() {
-    if (!this._state || this._state.checkpoints.length === 0) {
+    if (!this._state || !this._state.checkpoints || this._state.checkpoints.length === 0) {
       return null;
     }
     return this._state.checkpoints[this._state.checkpoints.length - 1];
@@ -410,7 +410,7 @@ class BuildStateManager {
    * @returns {Object|null} Checkpoint or null
    */
   getCheckpoint(checkpointId) {
-    if (!this._state) {
+    if (!this._state || !this._state.checkpoints) {
       return null;
     }
     return this._state.checkpoints.find((c) => c.id === checkpointId) || null;
@@ -551,11 +551,11 @@ class BuildStateManager {
             : 0,
       },
       metrics: state.metrics,
-      recentFailures: state.failedAttempts.slice(-5),
+      recentFailures: (state.failedAttempts || []).slice(-5),
       abandoned: isAbandoned,
       worktree: state.worktree,
-      checkpointCount: state.checkpoints.length,
-      notificationCount: state.notifications.filter((n) => !n.acknowledged).length,
+      checkpointCount: (state.checkpoints || []).length,
+      notificationCount: (state.notifications || []).filter((n) => !n.acknowledged).length,
     };
   }
 
