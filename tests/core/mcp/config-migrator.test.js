@@ -523,7 +523,8 @@ describe('config-migrator', () => {
 
     test('backs up project directory when DIRECTORY status', () => {
       const configPath = path.join('/project', 'mcp.json');
-      existsSyncSpy.mockImplementation((p) => p === configPath);
+      const projectMcpPath = '/project/.aios-core/tools/mcp';
+      existsSyncSpy.mockImplementation((p) => p === configPath || p === projectMcpPath);
       readFileSyncSpy.mockReturnValue(JSON.stringify({ servers: {} }));
       checkLinkStatus.mockReturnValue({ status: LINK_STATUS.DIRECTORY });
       globalConfigExists.mockReturnValue(true);
@@ -556,9 +557,10 @@ describe('config-migrator', () => {
       expect(result.results.errors).toContainEqual(expect.stringContaining('Backup failed'));
     });
 
-    test('propagates exceptions thrown before try/catch (analyzeMigration)', () => {
-      // analyzeMigration is called before the try/catch in executeMigration,
-      // so errors from it propagate as unhandled exceptions
+    test('propaga exceções de analyzeMigration (chamado antes do try/catch)', () => {
+      // analyzeMigration (linha 184) é chamado ANTES do try/catch (linha 213),
+      // então exceções propagam como unhandled. Isso documenta o comportamento
+      // atual — idealmente deveria retornar { success: false, errors: [...] }.
       checkLinkStatus.mockImplementation(() => { throw new Error('unexpected'); });
 
       expect(() => executeMigration('/project')).toThrow('unexpected');
