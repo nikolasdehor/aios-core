@@ -49,6 +49,11 @@ describe('SessionContextLoader', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Re-configurar defaults para evitar leak de mocks que lançam exceção
+    fs.existsSync.mockReturnValue(false);
+    fs.readFileSync.mockReturnValue('{}');
+    mockDetector.detectSessionType.mockReturnValue('new');
+    mockDetector.updateSessionState.mockImplementation(() => {});
     loader = new SessionContextLoader();
   });
 
@@ -357,7 +362,8 @@ describe('SessionContextLoader', () => {
         workflowActive: null,
       });
 
-      // Should show last 5: cmd2..cmd6
+      // Should show last 5: cmd2..cmd6 (cmd1 excluído)
+      expect(result).not.toContain('cmd1');
       expect(result).toContain('cmd2');
       expect(result).toContain('cmd6');
     });
@@ -468,6 +474,8 @@ describe('SessionContextLoader', () => {
     });
 
     test('does not add null lastCommand to history', () => {
+      // Sem arquivo de sessão existente, o state é construído do zero
+      // sem campo lastCommands (sparse state: undefined, não array vazio)
       fs.existsSync.mockReturnValue(false);
 
       loader.updateSession('dev', 'Dex', null);
@@ -773,6 +781,7 @@ describe('SessionContextLoader', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('DISK_FULL');
+      expect(warnSpy).toHaveBeenCalled();
       warnSpy.mockRestore();
     });
 

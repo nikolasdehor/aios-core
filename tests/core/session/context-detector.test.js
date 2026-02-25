@@ -16,7 +16,7 @@ describe('context-detector', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.spyOn(console, 'warn').mockImplementation();
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
     detector = new ContextDetector();
   });
 
