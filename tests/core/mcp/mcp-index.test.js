@@ -83,12 +83,12 @@ describe('MCP index facade (core/mcp/index)', () => {
     });
 
     it('exports symlinkManager namespace object', () => {
-      expect(mcpIndex.symlinkManager).toBeDefined();
+      expect(mcpIndex.symlinkManager).not.toBeNull();
       expect(typeof mcpIndex.symlinkManager).toBe('object');
     });
 
     it('exports configMigrator namespace object', () => {
-      expect(mcpIndex.configMigrator).toBeDefined();
+      expect(mcpIndex.configMigrator).not.toBeNull();
       expect(typeof mcpIndex.configMigrator).toBe('object');
     });
   });

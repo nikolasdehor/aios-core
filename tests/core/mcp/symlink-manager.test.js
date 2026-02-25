@@ -83,7 +83,9 @@ describe('symlink-manager', () => {
 
     it('should handle project root with trailing separator', () => {
       const result = getProjectMcpPath('/my/project/');
-      expect(result).toBe(path.join('/my/project/', '.aios-core', 'tools', 'mcp'));
+      // Deve produzir o mesmo path canônico que sem trailing separator
+      const canonical = getProjectMcpPath('/my/project');
+      expect(result).toBe(canonical);
     });
   });
 
@@ -388,18 +390,17 @@ describe('symlink-manager', () => {
         return true;
       });
 
-      let callCount = 0;
-      fs.lstatSync.mockImplementation(() => {
-        callCount++;
-        if (callCount <= 2) return { isSymbolicLink: () => false };
-        return { isSymbolicLink: () => true };
-      });
+      fs.lstatSync
+        .mockReturnValueOnce({ isSymbolicLink: () => false })
+        .mockReturnValueOnce({ isSymbolicLink: () => false })
+        .mockReturnValue({ isSymbolicLink: () => true });
       fs.rmSync.mockReturnValue(undefined);
       fs.symlinkSync.mockReturnValue(undefined);
       fs.readlinkSync.mockReturnValue(globalPath);
 
       const result = createLink(projectRoot, { force: true });
       expect(fs.rmSync).toHaveBeenCalledWith(linkPath, { recursive: true });
+      expect(result).toHaveProperty('success');
     });
 
     it('should remove existing symlink with force and create new one', () => {
@@ -417,6 +418,7 @@ describe('symlink-manager', () => {
 
       const result = createLink(projectRoot, { force: true });
       expect(fs.unlinkSync).toHaveBeenCalledWith(linkPath);
+      expect(result).toHaveProperty('success');
     });
 
     it('should create symlink on Unix systems', () => {

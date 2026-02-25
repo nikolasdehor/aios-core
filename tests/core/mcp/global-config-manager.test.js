@@ -79,11 +79,13 @@ describe('global-config-manager', () => {
     test('globalMcpDirExists checks mcp directory', () => {
       fs.existsSync.mockReturnValue(false);
       expect(globalMcpDirExists()).toBe(false);
+      expect(fs.existsSync).toHaveBeenCalledWith(expect.stringContaining('mcp'));
     });
 
     test('globalConfigExists checks config file', () => {
       fs.existsSync.mockReturnValue(true);
       expect(globalConfigExists()).toBe(true);
+      expect(fs.existsSync).toHaveBeenCalledWith(expect.stringContaining('global-config.json'));
     });
   });
 
