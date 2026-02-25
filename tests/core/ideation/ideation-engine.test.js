@@ -10,9 +10,16 @@
 const child_process = require('child_process');
 const fs = require('fs');
 
-// Mock gotchas-memory antes de carregar ideation-engine
-// (ideation-engine tenta `new GotchasMemory()` mas o export é { GotchasMemory: class })
-jest.mock('../../../.aios-core/core/memory/gotchas-memory', () => null);
+// Mock gotchas-memory com shape de constructor.
+// O módulo retornado funciona como constructor diretamente (import atual sem
+// destructuring) E como named export { GotchasMemory } (pós-fix #519).
+jest.mock('../../../.aios-core/core/memory/gotchas-memory', () => {
+  const MockGotchasMemory = jest.fn().mockImplementation(() => ({
+    getAll: jest.fn().mockResolvedValue([]),
+  }));
+  MockGotchasMemory.GotchasMemory = MockGotchasMemory;
+  return MockGotchasMemory;
+});
 
 const execSyncSpy = jest.spyOn(child_process, 'execSync').mockReturnValue('');
 jest.spyOn(fs, 'existsSync').mockReturnValue(true);
@@ -33,7 +40,11 @@ describe('IdeationEngine', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Reconfigurar retornos padrão para evitar leak entre testes
     execSyncSpy.mockReturnValue('');
+    fs.existsSync.mockReturnValue(true);
+    fs.mkdirSync.mockImplementation(() => {});
+    fs.writeFileSync.mockImplementation(() => {});
     engine = new IdeationEngine({
       rootPath: '/fake/project',
       gotchasMemory: null,
@@ -373,12 +384,14 @@ describe('IdeationEngine', () => {
     });
 
     test('captura erros de analyzers sem propagar', async () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       engine.analyzers.security.analyze = jest.fn().mockRejectedValue(
         new Error('analysis failed'),
       );
 
       const result = await engine.ideate({ focus: 'security', save: false });
       expect(result.allSuggestions.length).toBe(0);
+      warnSpy.mockRestore();
     });
 
     test('ordena por prioridade decrescente', async () => {
