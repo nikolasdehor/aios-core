@@ -10,10 +10,31 @@
  * @version 1.0.0
  */
 
+// RegistryProvider — T1, mocked as unavailable so CodeGraph is the active provider
+jest.mock('../../../.aios-core/core/code-intel/providers/registry-provider', () => ({
+  RegistryProvider: jest.fn().mockImplementation((opts) => ({
+    name: 'registry',
+    options: opts,
+    isAvailable: jest.fn().mockReturnValue(false),
+    findDefinition: jest.fn(),
+    findReferences: jest.fn(),
+    findCallers: jest.fn(),
+    findCallees: jest.fn(),
+    analyzeDependencies: jest.fn(),
+    analyzeComplexity: jest.fn(),
+    analyzeCodebase: jest.fn(),
+    getProjectStats: jest.fn(),
+  })),
+}));
+
 jest.mock('../../../.aios-core/core/code-intel/providers/code-graph-provider', () => ({
   CodeGraphProvider: jest.fn().mockImplementation((opts) => ({
     name: 'code-graph',
     options: opts,
+    // isAvailable: true when mcpCallFn is configured (matches new polymorphic detection)
+    isAvailable: jest.fn().mockReturnValue(
+      typeof opts.mcpCallFn === 'function',
+    ),
     findDefinition: jest.fn(),
     findReferences: jest.fn(),
     findCallers: jest.fn(),
@@ -44,8 +65,13 @@ function createClient(opts = {}) {
 function createClientWithProvider() {
   const mcpCallFn = jest.fn();
   const client = createClient({ mcpCallFn });
-  // The auto-registered provider has mcpCallFn, so it's "available"
+  // CodeGraph provider (index 1) has isAvailable=true via mcpCallFn
   return { client, mcpCallFn };
+}
+
+/** Get the CodeGraph mock provider (index 1, after Registry at index 0) */
+function getCodeGraphProvider(client) {
+  return client._providers[1];
 }
 
 // --- Tests ---
@@ -84,7 +110,7 @@ describe('CodeIntelClient', () => {
   describe('constructor', () => {
     it('should initialize with default state', () => {
       const client = createClient();
-      expect(client._providers).toHaveLength(1); // auto-registered CodeGraph
+      expect(client._providers).toHaveLength(2); // Registry (T1) + CodeGraph (T3)
       expect(client._activeProvider).toBeNull();
       expect(client._cbState).toBe(CB_CLOSED);
       expect(client._cbFailures).toBe(0);
@@ -93,12 +119,13 @@ describe('CodeIntelClient', () => {
       expect(client._cacheMisses).toBe(0);
     });
 
-    it('should pass options to the auto-registered provider', () => {
+    it('should pass options to the auto-registered CodeGraph provider', () => {
       const mcpCallFn = jest.fn();
       const client = createClient({ mcpServerName: 'custom', mcpCallFn });
-      const provider = client._providers[0];
-      expect(provider.options.mcpServerName).toBe('custom');
-      expect(provider.options.mcpCallFn).toBe(mcpCallFn);
+      // _providers[0] = Registry, _providers[1] = CodeGraph
+      const codeGraph = client._providers[1];
+      expect(codeGraph.options.mcpServerName).toBe('custom');
+      expect(codeGraph.options.mcpCallFn).toBe(mcpCallFn);
     });
   });
 
@@ -110,7 +137,7 @@ describe('CodeIntelClient', () => {
       const client = createClient();
       const extra = { name: 'extra', options: {} };
       client.registerProvider(extra);
-      expect(client._providers).toHaveLength(2);
+      expect(client._providers).toHaveLength(3); // Registry + CodeGraph + extra
     });
 
     it('should reset active provider on registration', () => {
@@ -126,12 +153,12 @@ describe('CodeIntelClient', () => {
   // isCodeIntelAvailable
   // --------------------------------------------------
   describe('isCodeIntelAvailable()', () => {
-    it('should return false when no provider has mcpCallFn', () => {
-      const client = createClient(); // no mcpCallFn
+    it('should return false when no provider isAvailable', () => {
+      const client = createClient(); // no mcpCallFn → CodeGraph.isAvailable=false
       expect(client.isCodeIntelAvailable()).toBe(false);
     });
 
-    it('should return true when provider has mcpCallFn', () => {
+    it('should return true when provider isAvailable', () => {
       const { client } = createClientWithProvider();
       expect(client.isCodeIntelAvailable()).toBe(true);
     });
@@ -165,7 +192,7 @@ describe('CodeIntelClient', () => {
 
     it('should open after CIRCUIT_BREAKER_THRESHOLD consecutive failures', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
 
       provider.findDefinition.mockRejectedValue(new Error('fail'));
 
@@ -178,7 +205,7 @@ describe('CodeIntelClient', () => {
 
     it('should return null when circuit is OPEN', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockRejectedValue(new Error('fail'));
 
       // Trip the breaker
@@ -195,7 +222,7 @@ describe('CodeIntelClient', () => {
 
     it('should transition to HALF_OPEN after reset timeout', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockRejectedValue(new Error('fail'));
 
       for (let i = 0; i < CIRCUIT_BREAKER_THRESHOLD; i++) {
@@ -210,7 +237,7 @@ describe('CodeIntelClient', () => {
 
     it('should close after success in HALF_OPEN state', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
 
       // Trip breaker
       provider.findDefinition.mockRejectedValue(new Error('fail'));
@@ -231,7 +258,7 @@ describe('CodeIntelClient', () => {
 
     it('should reset failure count on success', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
 
       // Partial failures (not enough to trip)
       provider.findDefinition.mockRejectedValueOnce(new Error('fail'));
@@ -251,7 +278,7 @@ describe('CodeIntelClient', () => {
   describe('cache', () => {
     it('should cache results on first call', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockResolvedValue({ file: 'a.js' });
 
       await client.findDefinition('sym');
@@ -260,7 +287,7 @@ describe('CodeIntelClient', () => {
 
     it('should return cached result on second call', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockResolvedValue({ file: 'a.js' });
 
       const first = await client.findDefinition('sym');
@@ -273,7 +300,7 @@ describe('CodeIntelClient', () => {
 
     it('should evict expired cache entries', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockResolvedValue({ file: 'a.js' });
 
       await client.findDefinition('sym');
@@ -291,7 +318,7 @@ describe('CodeIntelClient', () => {
 
     it('should track cache hits and misses', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockResolvedValue({ file: 'a.js' });
 
       await client.findDefinition('sym'); // miss
@@ -348,7 +375,7 @@ describe('CodeIntelClient', () => {
 
     it('should calculate cacheHitRate correctly', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockResolvedValue({});
 
       await client.findDefinition('a'); // miss
@@ -363,7 +390,7 @@ describe('CodeIntelClient', () => {
 
     it('should log latency entries', async () => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider.findDefinition.mockResolvedValue({});
 
       await client.findDefinition('sym');
@@ -397,7 +424,7 @@ describe('CodeIntelClient', () => {
 
     it.each(capabilities)('%s should delegate to provider', async (cap, args) => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider[cap].mockResolvedValue({ result: cap });
 
       const result = await client[cap](...args);
@@ -407,7 +434,7 @@ describe('CodeIntelClient', () => {
 
     it.each(capabilities)('%s should return null on provider error', async (cap, args) => {
       const { client } = createClientWithProvider();
-      const provider = client._providers[0];
+      const provider = getCodeGraphProvider(client);
       provider[cap].mockRejectedValue(new Error('fail'));
 
       const result = await client[cap](...args);
