@@ -7,8 +7,12 @@
  */
 
 jest.mock('fs');
+jest.mock('../../../.aios-core/core/synapse/utils/atomic-write', () => ({
+  atomicWriteSync: jest.fn(),
+}));
 
 const fs = require('fs');
+const { atomicWriteSync } = require('../../../.aios-core/core/synapse/utils/atomic-write');
 const ContextDetector = require('../../../.aios-core/core/session/context-detector');
 
 describe('context-detector', () => {
@@ -195,34 +199,31 @@ describe('context-detector', () => {
   describe('updateSessionState', () => {
     test('writes session state to file', () => {
       fs.existsSync.mockReturnValue(true);
-      fs.writeFileSync.mockImplementation(() => {});
       detector.updateSessionState({ sessionId: 'test-123', lastCommands: ['help'] }, '/tmp/session.json');
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(atomicWriteSync).toHaveBeenCalledWith(
         '/tmp/session.json',
         expect.stringContaining('test-123'),
-        'utf8',
       );
     });
 
-    test('creates directory if not exists', () => {
-      fs.existsSync.mockReturnValue(false);
-      fs.mkdirSync.mockImplementation(() => {});
-      fs.writeFileSync.mockImplementation(() => {});
+    test('delegates directory creation to atomicWriteSync', () => {
       detector.updateSessionState({}, '/tmp/new-dir/session.json');
-      expect(fs.mkdirSync).toHaveBeenCalledWith(expect.any(String), { recursive: true });
+      expect(atomicWriteSync).toHaveBeenCalledWith(
+        '/tmp/new-dir/session.json',
+        expect.any(String),
+      );
     });
 
     test('handles write errors gracefully', () => {
       fs.existsSync.mockReturnValue(true);
-      fs.writeFileSync.mockImplementation(() => { throw new Error('write error'); });
+      atomicWriteSync.mockImplementation(() => { throw new Error('write error'); });
       expect(() => detector.updateSessionState({}, '/tmp/session.json')).not.toThrow();
     });
 
     test('generates sessionId when not provided', () => {
       fs.existsSync.mockReturnValue(true);
-      fs.writeFileSync.mockImplementation(() => {});
       detector.updateSessionState({}, '/tmp/session.json');
-      const written = fs.writeFileSync.mock.calls[0][1];
+      const written = atomicWriteSync.mock.calls[0][1];
       expect(JSON.parse(written).sessionId).toMatch(/^session-/);
     });
   });
