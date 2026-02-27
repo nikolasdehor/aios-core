@@ -142,9 +142,8 @@ describe('task-elicitation', () => {
     });
 
     test('custom validator returns true', () => {
-      expect(step.validators.length).toBeGreaterThan(0);
-      const validator = step.validators[0];
-      expect(validator.validate({})).toBe(true);
+      expect(step.validators).toHaveLength(1);
+      expect(step.validators[0].validate({})).toBe(true);
     });
   });
 
