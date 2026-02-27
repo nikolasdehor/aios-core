@@ -54,13 +54,15 @@ describe('IdeationEngine — GotchasMemory import regression (#517)', () => {
     });
 
     // Suppress the expected console.warn
-    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-    IdeationEngine = require('../../../.aios-core/core/ideation/ideation-engine');
-    const engine = new IdeationEngine({ rootPath: '/tmp/test' });
+    try {
+      IdeationEngine = require('../../../.aios-core/core/ideation/ideation-engine');
+      const engine = new IdeationEngine({ rootPath: '/tmp/test' });
 
-    expect(engine.gotchasMemory).toBeNull();
-
-    console.warn.mockRestore();
+      expect(engine.gotchasMemory).toBeNull();
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 });
