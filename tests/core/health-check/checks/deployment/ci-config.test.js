@@ -1,7 +1,7 @@
 /**
  * Unit tests for CiConfigCheck
  *
- * Tests CI/CD config detection: GitHub Actions, GitLab CI, Jenkins,
+ * Tests CI/CD config detection: GitHub Actions, GitLab CI,
  * workflow YAML validation, tab detection, and edge cases.
  */
 

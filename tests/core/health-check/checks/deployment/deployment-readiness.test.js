@@ -109,7 +109,7 @@ describe('DeploymentReadinessCheck', () => {
   });
 
   describe('execute - no main field', () => {
-    test('still passes without main field (just a warn check)', async () => {
+    test('warns without main field', async () => {
       fs.readFile.mockResolvedValue(JSON.stringify({
         name: 'my-app',
         version: '1.0.0',
@@ -118,8 +118,7 @@ describe('DeploymentReadinessCheck', () => {
       fs.access.mockResolvedValue(undefined);
 
       const result = await check.execute({ projectRoot: '/project' });
-      // No main is a "warn" check, not a fail
-      expect(['pass', 'warning']).toContain(result.status);
+      expect(result.status).toBe('warning');
     });
   });
 });

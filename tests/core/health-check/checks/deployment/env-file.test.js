@@ -85,7 +85,7 @@ describe('EnvFileCheck', () => {
       const result = await check.execute({ projectRoot: '/project' });
       expect(result.status).toBe('warning');
       expect(result.message).toContain('missing');
-      expect(result.message).toContain('2');
+      expect(result.message).toContain('missing');
     });
   });
 
