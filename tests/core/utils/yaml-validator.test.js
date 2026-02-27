@@ -216,8 +216,11 @@ workflow:
       expect(result.valid).toBe(false);
       expect(result.errors[0].type).toBe('parse_error');
       expect(result.errors[0].message).toBeTruthy();
-      // js-yaml inclui posição no message quando disponível
       expect(typeof result.errors[0].message).toBe('string');
+      // js-yaml inclui posição no message quando disponível
+      if (result.errors[0].line !== undefined) {
+        expect(typeof result.errors[0].line).toBe('number');
+      }
     });
   });
 
@@ -492,7 +495,7 @@ workflow:
 
     test('does not warn on nesting at exactly 10 levels (boundary)', () => {
       // getMaxDepth({ level: 'bottom' }) = 0; cada wrap adiciona +1
-      // 10 wraps = depth 10; threshold é > 10, então 10 não aciona warning
+      // 10 wraps from depth 0 = depth 10; threshold is > 10, so exactly 10 doesn't trigger
       let data = { level: 'bottom' };
       for (let i = 0; i < 10; i++) {
         data = { nested: data };
