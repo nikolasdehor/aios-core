@@ -73,12 +73,12 @@ describe('MCP index facade (core/mcp/index)', () => {
 
   describe('namespaced exports', () => {
     it('exports osDetector namespace object', () => {
-      expect(mcpIndex.osDetector).toBeDefined();
+      expect(mcpIndex.osDetector).not.toBeNull();
       expect(typeof mcpIndex.osDetector).toBe('object');
     });
 
     it('exports globalConfigManager namespace object', () => {
-      expect(mcpIndex.globalConfigManager).toBeDefined();
+      expect(mcpIndex.globalConfigManager).not.toBeNull();
       expect(typeof mcpIndex.globalConfigManager).toBe('object');
     });
 

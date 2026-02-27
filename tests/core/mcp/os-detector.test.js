@@ -122,7 +122,7 @@ describe('os-detector', () => {
     });
 
     test('getGlobalMcpDir returns ~/.aios/mcp', () => {
-      expect(getGlobalMcpDir()).toMatch(/\.aios[/\\]mcp$/);
+      expect(getGlobalMcpDir()).toMatch(/[/\\]\.aios[/\\]mcp$/);
     });
 
     test('getGlobalConfigPath returns global-config.json path', () => {
