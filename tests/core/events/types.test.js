@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Unit tests for events/types
  *
@@ -50,7 +52,7 @@ describe('events/types', () => {
       const values = Object.values(DashboardEventType);
       const unique = new Set(values);
       expect(unique.size).toBe(values.length);
-      values.forEach(v => expect(typeof v).toBe('string'));
+      values.forEach((v) => { expect(typeof v).toBe('string'); });
     });
   });
 });
