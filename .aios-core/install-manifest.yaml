@@ -8,7 +8,7 @@
 # - File types for categorization
 #
 version: 4.4.6
-generated_at: "2026-02-27T15:20:15.480Z"
+generated_at: "2026-02-27T15:23:23.530Z"
 generator: scripts/generate-install-manifest.js
 file_count: 1084
 files:
@@ -1697,9 +1697,9 @@ files:
     type: script
     size: 22989
   - path: development/scripts/yaml-validator.js
-    hash: sha256:b4a492a1dedbb11b6ddda9889ef6adb6cf792c2315c029ebc8c6b7ce7f57188f
+    hash: sha256:010b5ea63a8a21346611201811cc3696e820f896154edbd229337e3e06460bfc
     type: script
-    size: 10334
+    size: 10352
   - path: development/tasks/add-mcp.md
     hash: sha256:8a19ae5f343b68d7aace6a8400a18349fb7b4ebc92cecdab33e2a7f4f0d88512
     type: task
@@ -3341,9 +3341,9 @@ files:
     type: script
     size: 21677
   - path: infrastructure/scripts/yaml-validator.js
-    hash: sha256:90c5d19862f3f17196b22038f6870a327f628b095144bc9a53a08df6ccce156b
+    hash: sha256:27d2d6a956f229fbb6a592a4a8aed83a62cc09f9fbb90afd068f7ccebb7be731
     type: script
-    size: 10362
+    size: 10380
   - path: infrastructure/templates/aios-sync.yaml.template
     hash: sha256:a22718c4eec5b7bc808cb283f18a96c96cfcbbed4a0ffec6e332da45a4a0a549
     type: template
