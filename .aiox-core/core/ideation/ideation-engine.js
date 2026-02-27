@@ -14,7 +14,8 @@ const { execSync } = require('child_process');
 let GotchasMemory;
 try {
   ({ GotchasMemory } = require('../memory/gotchas-memory'));
-} catch {
+} catch (error) {
+  console.warn('[IdeationEngine] Failed to load GotchasMemory:', error.message);
   GotchasMemory = null;
 }
 
