@@ -112,24 +112,21 @@ describe('ConflictsCheck', () => {
   });
 
   describe('execute - error handling', () => {
-    test('returns error when outer try fails', async () => {
+    test('returns error when unexpected exception in outer try', async () => {
+      // All inner execSync errors are caught by nested try/catches,
+      // so to trigger the outer catch we force this.pass to throw
       execSync.mockImplementation(() => {
-        throw new Error('fatal git error');
+        throw new Error('exit code 1');
       });
-
-      // Override to make the outer try fail
-      const original = check.execute.bind(check);
-      check.execute = async (ctx) => {
-        try {
-          // Force an error in the outer scope
-          return check.error('Conflict check failed: fatal git error', new Error('fatal git error'));
-        } catch (e) {
-          return original(ctx);
-        }
-      };
+      jest.spyOn(check, 'pass').mockImplementation(() => {
+        throw new Error('unexpected internal error');
+      });
 
       const result = await check.execute({ projectRoot: '/project' });
       expect(result.status).toBe('error');
+      expect(result.message).toContain('unexpected internal error');
+
+      check.pass.mockRestore();
     });
   });
 

@@ -98,17 +98,19 @@ describe('CommitHistoryCheck', () => {
     });
 
     test('warns when many commits have short messages', async () => {
+      // 7/10 conventional (>50%) to avoid "Low conventional" trigger,
+      // but 7/10 short (<10 chars) to trigger "short messages" path
       const commits = [
-        'abc1234 fix',
-        'abc1235 up',
-        'abc1236 wip',
-        'abc1237 fix',
-        'abc1238 feat: add feature with proper message',
-        'abc1239 fix: resolve issue properly',
-        'abc1240 done',
-        'abc1241 test',
+        'abc1234 feat: implement authentication module',
+        'abc1235 fix: resolve parser bug in yaml loader',
+        'abc1236 docs: update API reference documentation',
+        'abc1237 fix: x',
+        'abc1238 test: a',
+        'abc1239 chore: b',
+        'abc1240 ci: c',
+        'abc1241 done',
         'abc1242 ok',
-        'abc1243 feat: another proper message here',
+        'abc1243 wip',
       ].join('\n');
       execSync.mockReturnValue(commits);
 
@@ -144,6 +146,7 @@ describe('CommitHistoryCheck', () => {
       execSync.mockReturnValue(commits);
 
       const result = await check.execute({ projectRoot: '/project' });
+      // pass(message, { details }) → result.details = { details: {...} }
       expect(result.details.details.analyzed).toBe(10);
       expect(result.details.details.recentCommits).toHaveLength(5);
     });

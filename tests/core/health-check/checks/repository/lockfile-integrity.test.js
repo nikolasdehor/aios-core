@@ -72,7 +72,9 @@ describe('LockfileIntegrityCheck', () => {
     });
 
     test('passes when no package.json exists', async () => {
-      fs.readFile.mockRejectedValue(new Error('ENOENT'));
+      const err = new Error('ENOENT');
+      err.code = 'ENOENT';
+      fs.readFile.mockRejectedValue(err);
 
       const result = await check.execute({ projectRoot: '/project' });
       expect(result.status).toBe('pass');
@@ -140,27 +142,28 @@ describe('LockfileIntegrityCheck', () => {
   // execute - error
   // ============================================================
   describe('execute - error', () => {
-    test('returns error on unexpected failure in outer try', async () => {
-      // Mock readFile to succeed for package.json but return lockfile
-      // that causes an error in the comparison logic (non-JSON parse issue
-      // is caught by inner try/catch, so we need to trigger outer catch)
+    test('returns error when unexpected exception in outer try', async () => {
+      // Inner try/catches handle fs errors; to trigger outer catch
+      // we force this.pass to throw after successful execution
       fs.readFile.mockImplementation((filePath) => {
         if (filePath.includes('package-lock')) {
-          return Promise.resolve(JSON.stringify({ lockfileVersion: 3 }));
+          return Promise.resolve(JSON.stringify({
+            lockfileVersion: 3,
+            packages: { '': { dependencies: {} } },
+          }));
         }
-        // Return a package.json where .dependencies spread throws
-        return Promise.resolve(JSON.stringify({
-          dependencies: { lodash: '1.0.0' },
-        }));
+        return Promise.resolve(JSON.stringify({ dependencies: {} }));
       });
 
-      // packages is undefined, accessing packages?.['node_modules/lodash'] returns undefined
-      // This means missing includes 'lodash', so we get a fail instead of error.
-      // The outer catch only triggers on truly unexpected errors.
-      // Let's verify the fail path with missing packages instead:
+      jest.spyOn(check, 'pass').mockImplementation(() => {
+        throw new Error('unexpected internal error');
+      });
+
       const result = await check.execute({ projectRoot: '/project' });
-      expect(result.status).toBe('fail');
-      expect(result.message).toContain('out of sync');
+      expect(result.status).toBe('error');
+      expect(result.message).toContain('unexpected internal error');
+
+      check.pass.mockRestore();
     });
   });
 
