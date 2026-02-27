@@ -79,12 +79,11 @@ describe('FrameworkConfigCheck', () => {
   describe('execute - missing recommended', () => {
     test('warns when recommended configs missing', async () => {
       fs.stat.mockImplementation((p) => {
-        if (p.includes('.aios-core') || p.includes('.claude')) {
-          if (p.includes('CLAUDE.md') || p.includes('docs') || p.endsWith('.aios')) {
-            return Promise.reject(new Error('ENOENT'));
-          }
+        // Required: .aios-core and .claude directories exist
+        if (p.endsWith('.aios-core') || p.endsWith('.claude')) {
           return Promise.resolve({ isDirectory: () => true, isFile: () => false });
         }
+        // Recommended configs (.aios, CLAUDE.md, docs) are absent
         return Promise.reject(new Error('ENOENT'));
       });
 

@@ -46,7 +46,7 @@ describe('DependenciesCheck', () => {
 
       const result = await check.execute({ projectRoot: '/project' });
       expect(result.status).toBe('pass');
-      expect(result.message).toContain('3');
+      expect(result.message).toMatch(/\b3\b/);
     });
   });
 

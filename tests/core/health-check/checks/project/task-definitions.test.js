@@ -98,8 +98,8 @@ describe('TaskDefinitionsCheck', () => {
 
     test('returns invalid for empty YAML', () => {
       const result = check.validateTaskDefinition('', 'test.yaml');
-      // Empty string may parse as null
-      expect(typeof result.valid).toBe('boolean');
+      // Empty string parses as null → invalid
+      expect(result.valid).toBe(false);
     });
 
     test('returns invalid for YAML parse error', () => {

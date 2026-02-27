@@ -40,7 +40,9 @@ describe('AiosDirectoryCheck', () => {
 
   describe('execute - not present', () => {
     test('passes when .aios not present', async () => {
-      fs.stat.mockRejectedValue(new Error('ENOENT'));
+      const err = new Error('ENOENT');
+      err.code = 'ENOENT';
+      fs.stat.mockRejectedValue(err);
 
       const result = await check.execute({ projectRoot: '/project' });
       expect(result.status).toBe('pass');
