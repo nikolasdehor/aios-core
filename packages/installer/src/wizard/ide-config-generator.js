@@ -740,17 +740,43 @@ async function createClaudeSettingsLocal(projectRoot) {
     }
   }
 
-  // Ensure hooks.UserPromptSubmit structure exists
   if (!settings.hooks) {
     settings.hooks = {};
   }
-  if (!Array.isArray(settings.hooks.UserPromptSubmit)) {
-    settings.hooks.UserPromptSubmit = [];
+
+  // Hook filename prefix → Claude Code event mapping
+  // Convention: {event-prefix}-{name}.cjs (e.g. precompact-session-digest.cjs → PreCompact)
+  const HOOK_EVENT_PREFIX_MAP = {
+    precompact: 'PreCompact',
+    pretooluse: 'PreToolUse',
+    posttooluse: 'PostToolUse',
+    notificationsound: 'NotificationSound',
+    stop: 'Stop',
+  };
+
+  /**
+   * Resolve the Claude Code hook event from the filename.
+   * Falls back to UserPromptSubmit for hooks without a recognized prefix.
+   */
+  function resolveHookEvent(fileName) {
+    const baseName = fileName.replace('.cjs', '').toLowerCase();
+    for (const [prefix, event] of Object.entries(HOOK_EVENT_PREFIX_MAP)) {
+      if (baseName.startsWith(prefix)) {
+        return event;
+      }
+    }
+    return 'UserPromptSubmit';
   }
 
-  // Register each .cjs hook file
+  // Register each .cjs hook file under its correct event
   for (const hookFileName of hookFiles) {
     const hookFilePath = path.join(hooksDir, hookFileName);
+    const hookEvent = resolveHookEvent(hookFileName);
+
+    // Ensure the event array exists
+    if (!Array.isArray(settings.hooks[hookEvent])) {
+      settings.hooks[hookEvent] = [];
+    }
 
     // QA-C1 fix: Use correct Claude Code nested hook format
     // Windows workaround: $CLAUDE_PROJECT_DIR has known bug on Windows (GH #6023/#5814)
@@ -760,7 +786,7 @@ async function createClaudeSettingsLocal(projectRoot) {
 
     // Check if this hook is already registered (supports both nested and flat formats)
     const hookBaseName = hookFileName.replace('.cjs', '');
-    const alreadyRegistered = settings.hooks.UserPromptSubmit.some(entry => {
+    const alreadyRegistered = settings.hooks[hookEvent].some(entry => {
       if (Array.isArray(entry.hooks)) {
         return entry.hooks.some(h => h.command && h.command.includes(hookBaseName));
       }
@@ -768,7 +794,7 @@ async function createClaudeSettingsLocal(projectRoot) {
     });
 
     if (!alreadyRegistered) {
-      settings.hooks.UserPromptSubmit.push({
+      settings.hooks[hookEvent].push({
         hooks: [
           {
             type: 'command',

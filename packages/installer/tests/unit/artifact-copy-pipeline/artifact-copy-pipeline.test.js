@@ -185,17 +185,23 @@ describe('artifact-copy-pipeline (Story INS-4.3)', () => {
         const settingsContent = fs.readFileSync(path.join(tmpDir, '.claude', 'settings.local.json'), 'utf8');
         const settings = JSON.parse(settingsContent);
 
-        // Should have hooks.UserPromptSubmit with 2 entries
+        // synapse-engine → UserPromptSubmit, precompact → PreCompact
         expect(settings.hooks).toBeDefined();
         expect(settings.hooks.UserPromptSubmit).toBeDefined();
-        expect(settings.hooks.UserPromptSubmit.length).toBe(2);
+        expect(settings.hooks.UserPromptSubmit.length).toBe(1);
+        expect(settings.hooks.PreCompact).toBeDefined();
+        expect(settings.hooks.PreCompact.length).toBe(1);
 
-        // Both hooks registered
-        const commands = settings.hooks.UserPromptSubmit.flatMap(entry =>
+        // Each hook registered under its correct event
+        const upsCommands = settings.hooks.UserPromptSubmit.flatMap(entry =>
           entry.hooks.map(h => h.command)
         );
-        expect(commands.some(c => c.includes('synapse-engine'))).toBe(true);
-        expect(commands.some(c => c.includes('precompact-session-digest'))).toBe(true);
+        expect(upsCommands.some(c => c.includes('synapse-engine'))).toBe(true);
+
+        const pcCommands = settings.hooks.PreCompact.flatMap(entry =>
+          entry.hooks.map(h => h.command)
+        );
+        expect(pcCommands.some(c => c.includes('precompact-session-digest'))).toBe(true);
       } finally {
         cleanup(tmpDir);
       }
