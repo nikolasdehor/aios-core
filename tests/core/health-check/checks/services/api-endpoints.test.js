@@ -104,7 +104,7 @@ describe('ApiEndpointsCheck', () => {
           destroy: jest.fn(),
         };
         process.nextTick(() => {
-          if (opts.hostname && opts.hostname.includes('npm')) {
+          if ((opts.host || opts.hostname || '').includes('npm')) {
             callback({ statusCode: 200 });
           } else {
             if (errorCb) errorCb(new Error('timeout'));

@@ -14,7 +14,10 @@ const GeminiCliCheck = require('../../../../../.aios-core/core/health-check/chec
 
 jest.mock('child_process');
 jest.mock('os');
-jest.mock('path');
+jest.mock('path', () => ({
+  ...jest.requireActual('path'),
+  join: jest.fn(),
+}));
 jest.mock('fs', () => ({
   promises: {
     access: jest.fn(),

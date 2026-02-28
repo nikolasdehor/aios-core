@@ -97,7 +97,7 @@ describe('ApiEndpointsCheck', () => {
 
   test('execute returns warning when non-critical endpoint fails', async () => {
     https.request.mockImplementation((options, callback) => {
-      if (options.hostname && options.hostname.includes('npm')) {
+      if ((options.host || options.hostname || '').includes('npm')) {
         // npm Registry (critical) succeeds
         const req = { on: jest.fn(), end: jest.fn(), destroy: jest.fn() };
         process.nextTick(() => callback({ statusCode: 200 }));
@@ -285,7 +285,8 @@ describe('GeminiCliCheck', () => {
   test('execute returns warning when not authenticated', async () => {
     execSync
       .mockImplementationOnce(() => '1.5.0')
-      .mockImplementationOnce(() => 'not authenticated');
+      .mockImplementationOnce(() => 'not authenticated')
+      .mockImplementationOnce(() => '[]');
 
     mockFsPromises.access.mockImplementation((p) => {
       if (p.endsWith('.gemini')) return Promise.resolve();
@@ -309,7 +310,8 @@ describe('GeminiCliCheck', () => {
   test('execute returns warning when project config missing', async () => {
     execSync
       .mockImplementationOnce(() => '1.5.0')
-      .mockImplementationOnce(() => 'Authenticated');
+      .mockImplementationOnce(() => 'Authenticated')
+      .mockImplementationOnce(() => '[]');
 
     mockFsPromises.access.mockImplementation((p) => {
       if (p.includes('/home/')) return Promise.resolve();
@@ -326,7 +328,8 @@ describe('GeminiCliCheck', () => {
   test('execute detects preview features not enabled', async () => {
     execSync
       .mockImplementationOnce(() => '1.5.0')
-      .mockImplementationOnce(() => 'Authenticated');
+      .mockImplementationOnce(() => 'Authenticated')
+      .mockImplementationOnce(() => '[]');
 
     mockFsPromises.access.mockResolvedValue(undefined);
     mockFsPromises.readFile.mockResolvedValue(JSON.stringify({}));
