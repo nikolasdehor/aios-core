@@ -325,7 +325,7 @@ describe('symlink-manager', () => {
 
       const result = createLink(projectRoot);
       expect(fs.mkdirSync).toHaveBeenCalledWith(toolsDir, { recursive: true });
-      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('success', true);
     });
 
     it('should fail when tools directory creation fails', () => {
@@ -347,7 +347,7 @@ describe('symlink-manager', () => {
       fs.readlinkSync.mockReturnValue(globalPath);
 
       const result = createLink(projectRoot);
-      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('success', true);
       expect(result.alreadyLinked).toBe(true);
     });
 
@@ -436,7 +436,7 @@ describe('symlink-manager', () => {
 
       const result = createLink(projectRoot);
       expect(fs.symlinkSync).toHaveBeenCalledWith(globalPath, linkPath, 'dir');
-      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('success', true);
     });
 
     it('should create junction on Windows systems', () => {
@@ -542,7 +542,7 @@ describe('symlink-manager', () => {
       fs.existsSync.mockReturnValue(false);
 
       const result = removeLink(projectRoot);
-      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('success', true);
       expect(result.alreadyRemoved).toBe(true);
     });
 
@@ -563,7 +563,7 @@ describe('symlink-manager', () => {
       isWindows.mockReturnValue(false);
 
       const result = removeLink(projectRoot);
-      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('success', true);
       expect(fs.unlinkSync).toHaveBeenCalledWith(linkPath);
     });
 
@@ -581,7 +581,7 @@ describe('symlink-manager', () => {
       });
 
       const result = removeLink(projectRoot);
-      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('success', true);
       expect(execSync).toHaveBeenCalledWith(
         expect.stringContaining('rmdir'),
         expect.objectContaining({ windowsHide: true })
