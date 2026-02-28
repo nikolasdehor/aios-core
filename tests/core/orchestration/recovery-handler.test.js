@@ -208,16 +208,14 @@ describe('RecoveryHandler', () => {
       expect(warns.some((w) => w.message.includes('RecoveryTracker not available'))).toBe(true);
     });
 
-    test('_getStuckDetector retorna mesma instância em chamadas repetidas', () => {
+    test('_getStuckDetector tenta recarregar a cada chamada quando módulo indisponível', () => {
       // Primeira chamada retorna null (módulo indisponível)
       handler._getStuckDetector();
-      // Limpa logs para ver se segunda chamada tenta novamente
       const logCountAfterFirst = handler.logs.length;
-      // Não deve tentar carregar de novo pois _stuckDetector já foi setado como null
-      // Mas o código verifica !this._stuckDetector que é null (falsy), então tenta novamente
+      // O código verifica !this._stuckDetector (null é falsy), então tenta novamente
       handler._getStuckDetector();
-      // Deve ter logado novamente
-      expect(handler.logs.length).toBeGreaterThanOrEqual(logCountAfterFirst);
+      // Deve ter logado warning adicional na segunda tentativa
+      expect(handler.logs.length).toBeGreaterThan(logCountAfterFirst);
     });
   });
 
