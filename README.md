@@ -742,13 +742,14 @@ This project was originally derived from the [BMad Method](https://github.com/bm
 
 ### 🌟 Contribuidores da Comunidade
 
-<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- Manually maintained — add new community contributors here -->
 <table>
   <tr>
     <td align="center"><a href="https://github.com/nikolasdehor"><img src="https://github.com/nikolasdehor.png?size=100" width="100px;" alt="Nikolas de Hor"/><br /><sub><b>Nikolas de Hor</b></sub></a><br />💻🐛⚠️👀</td>
   </tr>
 </table>
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- prettier-ignore-end -->
 
 <sub>Construído com ❤️ para a comunidade de desenvolvimento assistido por IA</sub>
 
