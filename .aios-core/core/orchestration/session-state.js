@@ -618,7 +618,9 @@ O que você quer fazer?
       progress: {
         completed: progress.stories_done.length,
         total: epic.total_stories,
-        percentage: Math.round((progress.stories_done.length / epic.total_stories) * 100),
+        percentage: epic.total_stories > 0
+          ? Math.round((progress.stories_done.length / epic.total_stories) * 100)
+          : 0,
         storiesDone: progress.stories_done,
         storiesPending: progress.stories_pending,
         currentStory: progress.current_story,

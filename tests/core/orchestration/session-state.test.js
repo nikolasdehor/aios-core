@@ -541,6 +541,23 @@ describe('SessionState', () => {
       expect(summary.progress.storiesDone).toEqual(['11.1', '11.2']);
       expect(summary.context.branch).toBe('feature/bob');
     });
+
+    it('should return 0 percentage when totalStories is 0 (no division by zero)', async () => {
+      const epicInfo = {
+        id: 'epic-empty',
+        title: 'Empty Epic',
+        totalStories: 0,
+        storyIds: [],
+      };
+      await sessionState.createSessionState(epicInfo, 'feature/empty');
+
+      const summary = sessionState.getProgressSummary();
+
+      expect(summary.progress.percentage).toBe(0);
+      expect(Number.isNaN(summary.progress.percentage)).toBe(false);
+      expect(summary.progress.total).toBe(0);
+      expect(summary.progress.completed).toBe(0);
+    });
   });
 
   describe('discard()', () => {
