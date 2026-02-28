@@ -139,7 +139,9 @@ describe('DiskSpaceCheck', () => {
       });
 
       const result = await check.execute({ projectRoot: 'C:\\project' });
-      // Falls back to { free: 10, total: 100, usedPercent: 90 }
+      // Implementation falls back to { free: 10, total: 100, usedPercent: 90 } when both
+      // methods fail — returns 'pass' since it cannot determine real disk state.
+      // Intentional: the check won't block users when Windows commands are unavailable.
       expect(result.status).toBe('pass');
     });
   });

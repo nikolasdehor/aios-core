@@ -64,6 +64,9 @@ describe('EnvironmentVarsCheck', () => {
 
       const result = await check.execute({});
       expect(result.status).toBe('pass');
+      // BaseCheck.pass(msg, details) stores the 2nd arg as result.details directly,
+      // so the path is result.details.details.aiosVars (outer 'details' from pass(),
+      // inner 'details' from the object passed by the implementation).
       expect(result.details.details.aiosVars).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ name: 'AIOS_DEBUG' })

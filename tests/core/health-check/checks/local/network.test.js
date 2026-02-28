@@ -59,6 +59,7 @@ describe('NetworkCheck', () => {
         return {
           on: jest.fn(),
           end: jest.fn(),
+          destroy: jest.fn(),
         };
       });
 
@@ -138,6 +139,7 @@ describe('NetworkCheck', () => {
         return {
           on: jest.fn(),
           end: jest.fn(),
+          destroy: jest.fn(),
         };
       });
 
@@ -152,6 +154,7 @@ describe('NetworkCheck', () => {
         return {
           on: jest.fn(),
           end: jest.fn(),
+          destroy: jest.fn(),
         };
       });
 
