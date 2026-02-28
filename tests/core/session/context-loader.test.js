@@ -48,8 +48,10 @@ describe('SessionContextLoader', () => {
   let loader;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    // Re-configurar defaults para evitar leak de mocks que lançam exceção
+    jest.resetAllMocks();
+    // Re-configurar defaults para evitar leak de mocks após resetAllMocks
+    const ContextDetector = require('../../../.aios-core/core/session/context-detector');
+    ContextDetector.mockImplementation(() => mockDetector);
     fs.existsSync.mockReturnValue(false);
     fs.readFileSync.mockReturnValue('{}');
     mockDetector.detectSessionType.mockReturnValue('new');
@@ -190,6 +192,10 @@ describe('SessionContextLoader', () => {
 
       const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       expect(loader.loadSessionState()).toEqual({});
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('[SessionContext]'),
+        expect.any(String),
+      );
       warnSpy.mockRestore();
     });
   });
