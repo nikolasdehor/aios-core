@@ -12,6 +12,16 @@ describe('ContextManager', () => {
   const WORKFLOW_ID = 'test-workflow-123';
   const PROJECT_ROOT = '/fake/project';
 
+  /** Shared bootstrap: initializes manager and resets mocks to default state */
+  async function bootstrapManager() {
+    fs.pathExists.mockResolvedValue(false);
+    await manager.initialize();
+    jest.clearAllMocks();
+    fs.ensureDir.mockResolvedValue(undefined);
+    fs.writeJson.mockResolvedValue(undefined);
+    fs.pathExists.mockResolvedValue(false);
+  }
+
   beforeEach(() => {
     jest.clearAllMocks();
     manager = new ContextManager(WORKFLOW_ID, PROJECT_ROOT);
@@ -257,12 +267,7 @@ describe('ContextManager', () => {
   // ─────────────────────────────────────────────
   describe('savePhaseOutput', () => {
     beforeEach(async () => {
-      fs.pathExists.mockResolvedValue(false);
-      await manager.initialize();
-      jest.clearAllMocks();
-      fs.ensureDir.mockResolvedValue(undefined);
-      fs.writeJson.mockResolvedValue(undefined);
-      fs.pathExists.mockResolvedValue(false);
+      await bootstrapManager();
     });
 
     test('atualiza currentPhase e status para in_progress', async () => {
@@ -359,12 +364,7 @@ describe('ContextManager', () => {
   // ─────────────────────────────────────────────
   describe('getContextForPhase', () => {
     beforeEach(async () => {
-      fs.pathExists.mockResolvedValue(false);
-      await manager.initialize();
-      jest.clearAllMocks();
-      fs.ensureDir.mockResolvedValue(undefined);
-      fs.writeJson.mockResolvedValue(undefined);
-      fs.pathExists.mockResolvedValue(false);
+      await bootstrapManager();
     });
 
     test('retorna contexto com dados das fases anteriores', async () => {
@@ -484,11 +484,7 @@ describe('ContextManager', () => {
   // ─────────────────────────────────────────────
   describe('markCompleted', () => {
     beforeEach(async () => {
-      fs.pathExists.mockResolvedValue(false);
-      await manager.initialize();
-      jest.clearAllMocks();
-      fs.ensureDir.mockResolvedValue(undefined);
-      fs.writeJson.mockResolvedValue(undefined);
+      await bootstrapManager();
     });
 
     test('define status como completed', async () => {
@@ -517,11 +513,7 @@ describe('ContextManager', () => {
   // ─────────────────────────────────────────────
   describe('markFailed', () => {
     beforeEach(async () => {
-      fs.pathExists.mockResolvedValue(false);
-      await manager.initialize();
-      jest.clearAllMocks();
-      fs.ensureDir.mockResolvedValue(undefined);
-      fs.writeJson.mockResolvedValue(undefined);
+      await bootstrapManager();
     });
 
     test('define status como failed com mensagem de erro', async () => {
@@ -552,11 +544,7 @@ describe('ContextManager', () => {
   // ─────────────────────────────────────────────
   describe('updateMetadata', () => {
     beforeEach(async () => {
-      fs.pathExists.mockResolvedValue(false);
-      await manager.initialize();
-      jest.clearAllMocks();
-      fs.ensureDir.mockResolvedValue(undefined);
-      fs.writeJson.mockResolvedValue(undefined);
+      await bootstrapManager();
     });
 
     test('faz merge de novos metadados com existentes', async () => {
@@ -1476,11 +1464,7 @@ describe('ContextManager', () => {
   // ─────────────────────────────────────────────
   describe('reset', () => {
     beforeEach(async () => {
-      fs.pathExists.mockResolvedValue(false);
-      await manager.initialize();
-      jest.clearAllMocks();
-      fs.ensureDir.mockResolvedValue(undefined);
-      fs.writeJson.mockResolvedValue(undefined);
+      await bootstrapManager();
     });
 
     test('reseta estado para initial com keepMetadata=true (default)', async () => {
