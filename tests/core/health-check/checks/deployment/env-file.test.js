@@ -9,6 +9,12 @@ const fs = require('fs').promises;
 const path = require('path');
 const EnvFileCheck = require('../../../../../.aios-core/core/health-check/checks/deployment/env-file');
 
+function enoent() {
+  const err = new Error('ENOENT: no such file or directory');
+  err.code = 'ENOENT';
+  return err;
+}
+
 jest.mock('path');
 jest.mock('fs', () => ({
   promises: {
@@ -37,7 +43,7 @@ describe('EnvFileCheck', () => {
 
   describe('execute - no env files', () => {
     test('passes when no .env files found', async () => {
-      fs.readFile.mockRejectedValue(new Error('ENOENT'));
+      fs.readFile.mockRejectedValue(enoent());
 
       const result = await check.execute({ projectRoot: '/project' });
       expect(result.status).toBe('pass');
@@ -49,9 +55,9 @@ describe('EnvFileCheck', () => {
     test('passes with .env and .env.example', async () => {
       fs.readFile.mockImplementation((p) => {
         if (p.includes('.env.example')) return Promise.resolve('DB_HOST=\nDB_PORT=\n');
-        if (p.includes('.env.local')) return Promise.reject(new Error('ENOENT'));
+        if (p.includes('.env.local')) return Promise.reject(enoent());
         if (p.includes('.env')) return Promise.resolve('DB_HOST=localhost\nDB_PORT=5432\n');
-        return Promise.reject(new Error('ENOENT'));
+        return Promise.reject(enoent());
       });
 
       const result = await check.execute({ projectRoot: '/project' });
@@ -64,7 +70,7 @@ describe('EnvFileCheck', () => {
     test('warns when .env exists but .env.example missing', async () => {
       fs.readFile.mockImplementation((p) => {
         if (p.endsWith('.env')) return Promise.resolve('SECRET=abc\n');
-        return Promise.reject(new Error('ENOENT'));
+        return Promise.reject(enoent());
       });
 
       const result = await check.execute({ projectRoot: '/project' });
@@ -77,9 +83,9 @@ describe('EnvFileCheck', () => {
     test('warns when .env has fewer vars than .env.example', async () => {
       fs.readFile.mockImplementation((p) => {
         if (p.includes('.env.example')) return Promise.resolve('A=\nB=\nC=\n');
-        if (p.includes('.env.local')) return Promise.reject(new Error('ENOENT'));
+        if (p.includes('.env.local')) return Promise.reject(enoent());
         if (p.includes('.env')) return Promise.resolve('A=1\n');
-        return Promise.reject(new Error('ENOENT'));
+        return Promise.reject(enoent());
       });
 
       const result = await check.execute({ projectRoot: '/project' });
@@ -93,9 +99,9 @@ describe('EnvFileCheck', () => {
     test('ignores comments and blank lines', async () => {
       fs.readFile.mockImplementation((p) => {
         if (p.includes('.env.example')) return Promise.resolve('# comment\nKEY=\n\n');
-        if (p.includes('.env.local')) return Promise.reject(new Error('ENOENT'));
+        if (p.includes('.env.local')) return Promise.reject(enoent());
         if (p.includes('.env')) return Promise.resolve('# comment\nKEY=val\n\n');
-        return Promise.reject(new Error('ENOENT'));
+        return Promise.reject(enoent());
       });
 
       const result = await check.execute({ projectRoot: '/project' });

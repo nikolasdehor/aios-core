@@ -3,6 +3,7 @@
  *
  * Tests CI/CD config detection: GitHub Actions, GitLab CI,
  * workflow YAML validation, tab detection, and edge cases.
+ * Note: Jenkins is not tested — the implementation only checks GitHub Actions and GitLab CI.
  */
 
 const fs = require('fs').promises;
