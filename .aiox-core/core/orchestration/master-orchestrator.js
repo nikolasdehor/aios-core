@@ -1358,7 +1358,7 @@ class MasterOrchestrator extends EventEmitter {
     if (totalEpics === 0) return 0;
 
     const completedEpics = Object.entries(state.epics).filter(
-      ([num, epic]) => epic.status === EpicStatus.COMPLETED && !EPIC_CONFIG[num]?.onDemand,
+      ([num, epic]) => epic.status === EpicStatus.COMPLETED && EPIC_CONFIG[num] && !EPIC_CONFIG[num].onDemand,
     ).length;
 
     return Math.round((completedEpics / totalEpics) * 100);
@@ -1415,7 +1415,7 @@ class MasterOrchestrator extends EventEmitter {
     if (totalEpics === 0) return 0;
 
     const completedEpics = Object.entries(this.executionState.epics).filter(
-      ([num, epic]) => epic.status === EpicStatus.COMPLETED && !EPIC_CONFIG[num]?.onDemand,
+      ([num, epic]) => epic.status === EpicStatus.COMPLETED && EPIC_CONFIG[num] && !EPIC_CONFIG[num].onDemand,
     ).length;
 
     return Math.round((completedEpics / totalEpics) * 100);
