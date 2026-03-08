@@ -950,7 +950,8 @@ describe('SwarmIntelligence', () => {
         content: 'works!',
       });
 
-      // Wait for async persistence
+      // Wait for all pending async writes, then do a final save
+      if (persisted._pendingSave) await persisted._pendingSave;
       await persisted._saveToDisk();
 
       // Load into fresh instance
