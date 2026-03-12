@@ -77,6 +77,15 @@ describe('config-cache', () => {
       cache.set('key1', 'v2');
       expect(cache.get('key1')).toBe('v2');
     });
+
+    test('returns null and cleans up when timestamp is missing (out-of-sync maps)', () => {
+      cache.set('key1', 'value1');
+      // Simulate out-of-sync: delete timestamp but keep cache entry
+      cache.timestamps.delete('key1');
+      expect(cache.get('key1')).toBeNull();
+      expect(cache.size).toBe(0);
+      expect(cache.misses).toBe(1);
+    });
   });
 
   // ── has ─────────────────────────────────────────────────────────

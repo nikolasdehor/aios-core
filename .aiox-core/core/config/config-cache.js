@@ -39,6 +39,13 @@ class ConfigCache {
       return null;
     }
 
+    // If timestamp is missing, maps are out-of-sync — treat as invalid
+    if (!this.timestamps.has(key)) {
+      this.cache.delete(key);
+      this.misses++;
+      return null;
+    }
+
     const timestamp = this.timestamps.get(key);
     const now = Date.now();
 
