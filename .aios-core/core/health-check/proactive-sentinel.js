@@ -78,9 +78,14 @@ const Events = {
 // ═══════════════════════════════════════════════════════════════════════════════════
 
 class ProactiveSentinel extends EventEmitter {
+  /**
+   * @param {Object} options
+   * @param {string} [options.projectRoot] - Project root directory
+   * @param {Object} [options.config] - Override default config
+   */
   constructor(options = {}) {
     super();
-    this.projectRoot = options.projectRoot || process.cwd();
+    this.projectRoot = options.projectRoot ?? process.cwd();
     this.config = { ...CONFIG, ...options.config };
     this.watchpoints = new Map();
     this.alerts = [];
@@ -88,17 +93,34 @@ class ProactiveSentinel extends EventEmitter {
     this._timers = new Map();
     this._lastHealthScore = 100;
     this._loaded = false;
+    this._saving = false;
   }
 
   /**
    * Get the alerts file path
+   * @returns {string} Absolute path to sentinel-alerts.json
+   * @private
    */
   _getFilePath() {
     return path.join(this.projectRoot, this.config.alertsPath);
   }
 
   /**
-   * Load alert history from disk
+   * Ensure persisted state has been hydrated before operating.
+   * Lazy-loads on first access to prevent empty-buffer overwrites.
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _ensureLoaded() {
+    if (!this._loaded) {
+      await this.load();
+    }
+  }
+
+  /**
+   * Load alert history from disk.
+   * Logs a warning on schema mismatch or parse errors.
+   * @returns {Promise<void>}
    */
   async load() {
     const filePath = this._getFilePath();
@@ -108,6 +130,9 @@ class ProactiveSentinel extends EventEmitter {
         const data = JSON.parse(raw);
 
         if (data.schemaVersion !== this.config.schemaVersion) {
+          console.warn(
+            `[ProactiveSentinel] Schema mismatch: found '${data.schemaVersion}', expected '${this.config.schemaVersion}'. Resetting alerts.`,
+          );
           this.alerts = [];
           this._loaded = true;
           return;
@@ -115,31 +140,45 @@ class ProactiveSentinel extends EventEmitter {
 
         this.alerts = Array.isArray(data.alerts) ? data.alerts : [];
       }
-    } catch {
+    } catch (err) {
+      console.warn('[ProactiveSentinel] Failed to load alerts:', err.message);
       this.alerts = [];
     }
     this._loaded = true;
   }
 
   /**
-   * Save alert history to disk
+   * Save alert history to disk.
+   * Guards against concurrent writes and uses atomic write (tmp + rename).
+   * @returns {Promise<void>}
    */
   async save() {
+    if (this._saving) return;
+    this._saving = true;
+
     const filePath = this._getFilePath();
     const dir = path.dirname(filePath);
 
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    try {
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+
+      const data = {
+        schemaVersion: this.config.schemaVersion,
+        version: this.config.version,
+        savedAt: new Date().toISOString(),
+        alerts: this.alerts,
+      };
+
+      const tmpPath = `${filePath}.tmp`;
+      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf8');
+      fs.renameSync(tmpPath, filePath);
+    } catch (err) {
+      console.error('[ProactiveSentinel] Failed to save alerts:', err.message);
+    } finally {
+      this._saving = false;
     }
-
-    const data = {
-      schemaVersion: this.config.schemaVersion,
-      version: this.config.version,
-      savedAt: new Date().toISOString(),
-      alerts: this.alerts,
-    };
-
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
   }
 
   /**
@@ -154,6 +193,7 @@ class ProactiveSentinel extends EventEmitter {
    * @param {string} [watchpoint.severity] - Alert severity when failing (default: warning)
    * @param {boolean} [watchpoint.autoHeal] - Whether to trigger auto-healing (default: false)
    * @param {string} [watchpoint.healerId] - HealerManager check ID for remediation
+   * @returns {Object} The registered watchpoint entry
    */
   registerWatchpoint(watchpoint) {
     if (!watchpoint.id || !watchpoint.name || !watchpoint.check) {
@@ -167,12 +207,12 @@ class ProactiveSentinel extends EventEmitter {
     const entry = {
       id: watchpoint.id,
       name: watchpoint.name,
-      description: watchpoint.description || '',
+      description: watchpoint.description ?? '',
       check: watchpoint.check,
       intervalMs: watchpoint.intervalMs ?? this.config.defaultIntervalMs,
       severity: watchpoint.severity ?? AlertSeverity.WARNING,
       autoHeal: watchpoint.autoHeal ?? false,
-      healerId: watchpoint.healerId || null,
+      healerId: watchpoint.healerId ?? null,
       lastStatus: WatchpointStatus.UNKNOWN,
       lastCheck: null,
       consecutiveFailures: 0,
@@ -230,7 +270,7 @@ class ProactiveSentinel extends EventEmitter {
     }
 
     const prevStatus = wp.lastStatus;
-    wp.lastStatus = result.status || WatchpointStatus.UNKNOWN;
+    wp.lastStatus = result.status ?? WatchpointStatus.UNKNOWN;
     wp.lastCheck = new Date().toISOString();
 
     // Track consecutive failures (DEGRADED counts as a soft failure)
@@ -245,15 +285,15 @@ class ProactiveSentinel extends EventEmitter {
       name: wp.name,
       status: wp.lastStatus,
       previousStatus: prevStatus,
-      message: result.message || '',
-      data: result.data || null,
+      message: result.message ?? '',
+      data: result.data ?? null,
       consecutiveFailures: wp.consecutiveFailures,
       timestamp: wp.lastCheck,
     };
 
     this.emit(Events.WATCHPOINT_EVALUATED, evaluation);
 
-    // Fire alert on non-healthy status or repeated failures
+    // Fire alert on non-healthy status change or repeated failures
     if (
       wp.lastStatus !== WatchpointStatus.HEALTHY &&
       wp.lastStatus !== WatchpointStatus.UNKNOWN &&
@@ -351,9 +391,9 @@ class ProactiveSentinel extends EventEmitter {
   /**
    * Get alert history
    * @param {Object} [filter]
-   * @param {string} [filter.severity]
-   * @param {string} [filter.watchpointId]
-   * @param {number} [filter.limit]
+   * @param {string} [filter.severity] - Filter by severity
+   * @param {string} [filter.watchpointId] - Filter by watchpoint
+   * @param {number} [filter.limit] - Limit results
    * @returns {Object[]} Filtered alerts
    */
   getAlerts(filter = {}) {
@@ -369,14 +409,15 @@ class ProactiveSentinel extends EventEmitter {
 
   /**
    * Get statistics summary
+   * @returns {Object} Stats with totals by severity and watchpoint
    */
   getStats() {
     const bySeverity = {};
     const byWatchpoint = {};
 
     for (const alert of this.alerts) {
-      bySeverity[alert.severity] = (bySeverity[alert.severity] || 0) + 1;
-      byWatchpoint[alert.watchpointId] = (byWatchpoint[alert.watchpointId] || 0) + 1;
+      bySeverity[alert.severity] = (bySeverity[alert.severity] ?? 0) + 1;
+      byWatchpoint[alert.watchpointId] = (byWatchpoint[alert.watchpointId] ?? 0) + 1;
     }
 
     return {
@@ -424,7 +465,7 @@ class ProactiveSentinel extends EventEmitter {
       severity: AlertSeverity.CRITICAL,
       check: async () => {
         const configFiles = [
-          path.join(projectRoot, 'core-config.yaml'),
+          path.join(projectRoot, '.aiox-core', 'core-config.yaml'),
           path.join(projectRoot, 'package.json'),
         ];
 
@@ -528,7 +569,7 @@ class ProactiveSentinel extends EventEmitter {
       },
     });
 
-    // 4. Disk space
+    // 4. Disk space (recursive directory size)
     this.registerWatchpoint({
       id: 'disk-space',
       name: 'Disk Space Monitor',
@@ -619,6 +660,9 @@ class ProactiveSentinel extends EventEmitter {
 
   /**
    * Fire an alert
+   * @param {Object} watchpoint - The watchpoint that triggered
+   * @param {Object} evaluation - The evaluation result
+   * @returns {Object} The fired alert
    * @private
    */
   _fireAlert(watchpoint, evaluation) {
@@ -660,9 +704,9 @@ class ProactiveSentinel extends EventEmitter {
     let deductions = 0;
     for (const [, wp] of this.watchpoints) {
       if (wp.lastStatus === WatchpointStatus.FAILING) {
-        deductions += this.config.healthScoreWeights[wp.severity] || 10;
+        deductions += this.config.healthScoreWeights[wp.severity] ?? 10;
       } else if (wp.lastStatus === WatchpointStatus.DEGRADED) {
-        deductions += (this.config.healthScoreWeights[wp.severity] || 10) * 0.5;
+        deductions += (this.config.healthScoreWeights[wp.severity] ?? 10) * 0.5;
       }
     }
 
