@@ -166,7 +166,9 @@ describe('Quality Gate Pipeline Integration', () => {
     it('should aggregate results from all layers', async () => {
       const manager = new QualityGateManager({
         layer1: { enabled: true },
-        layer2: { enabled: true },
+        // ponytail: installation_mode 'native' skips the WSL probe so
+        // runCodeRabbit() reaches the mocked runCommand() below on Windows CI.
+        layer2: { enabled: true, coderabbit: { installation_mode: 'native' } },
         layer3: { enabled: true, requireSignoff: false },
       });
 
@@ -210,7 +212,7 @@ describe('Quality Gate Pipeline Integration', () => {
     it('should return exit code 0 on success', async () => {
       const manager = new QualityGateManager({
         layer1: { enabled: true },
-        layer2: { enabled: true },
+        layer2: { enabled: true, coderabbit: { installation_mode: 'native' } },
         layer3: { enabled: true, requireSignoff: false },
       });
 
@@ -321,7 +323,7 @@ describe('Smoke Tests', () => {
   it('QGM-03: Layer 2 should pass with no CRITICAL issues', async () => {
     const layer = new Layer2PRAutomation({
       enabled: true,
-      coderabbit: { enabled: true, blockOn: ['CRITICAL'] },
+      coderabbit: { enabled: true, blockOn: ['CRITICAL'], installation_mode: 'native' },
     });
     layer.runCommand = jest.fn().mockResolvedValue({
       exitCode: 0,
@@ -338,7 +340,7 @@ describe('Smoke Tests', () => {
   it('QGM-04: Full pipeline should run all layers', async () => {
     const manager = new QualityGateManager({
       layer1: { enabled: true },
-      layer2: { enabled: true },
+      layer2: { enabled: true, coderabbit: { installation_mode: 'native' } },
       layer3: { enabled: true, requireSignoff: false },
     });
 
@@ -389,7 +391,7 @@ describe('Smoke Tests', () => {
   it('QGM-10: Should return correct exit codes', async () => {
     const manager = new QualityGateManager({
       layer1: { enabled: true },
-      layer2: { enabled: true },
+      layer2: { enabled: true, coderabbit: { installation_mode: 'native' } },
       layer3: { enabled: true, requireSignoff: false },
     });
 

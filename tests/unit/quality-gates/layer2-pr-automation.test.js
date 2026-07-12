@@ -4,7 +4,9 @@
  * @story 2.10 - Quality Gate Manager
  */
 
-const { Layer2PRAutomation } = require('../../../.aiox-core/core/quality-gates/layer2-pr-automation');
+const {
+  Layer2PRAutomation,
+} = require('../../../.aiox-core/core/quality-gates/layer2-pr-automation');
 
 describe('Layer2PRAutomation', () => {
   let layer;
@@ -14,6 +16,11 @@ describe('Layer2PRAutomation', () => {
       enabled: true,
       coderabbit: {
         enabled: true,
+        // ponytail: force native mode so runCodeRabbit() reaches the mocked
+        // runCommand() below instead of probing for WSL (absent on Windows
+        // CI runners, which made every case here fail before runCommand
+        // was ever called).
+        installation_mode: 'native',
         blockOn: ['CRITICAL'],
         warnOn: ['HIGH'],
       },
@@ -72,10 +79,10 @@ describe('Layer2PRAutomation', () => {
       const issues = layer.parseCodeRabbitOutput(output);
 
       expect(issues.length).toBe(4);
-      expect(issues.filter(i => i.severity === 'CRITICAL').length).toBe(1);
-      expect(issues.filter(i => i.severity === 'HIGH').length).toBe(1);
-      expect(issues.filter(i => i.severity === 'MEDIUM').length).toBe(1);
-      expect(issues.filter(i => i.severity === 'LOW').length).toBe(1);
+      expect(issues.filter((i) => i.severity === 'CRITICAL').length).toBe(1);
+      expect(issues.filter((i) => i.severity === 'HIGH').length).toBe(1);
+      expect(issues.filter((i) => i.severity === 'MEDIUM').length).toBe(1);
+      expect(issues.filter((i) => i.severity === 'LOW').length).toBe(1);
     });
 
     it('should return empty array for clean output', () => {
@@ -117,9 +124,7 @@ describe('Layer2PRAutomation', () => {
     });
 
     it('should handle graceful degradation when not installed', async () => {
-      layer.runCommand = jest.fn().mockRejectedValue(
-        new Error('command not found'),
-      );
+      layer.runCommand = jest.fn().mockRejectedValue(new Error('command not found'));
 
       const result = await layer.runCodeRabbit();
 
