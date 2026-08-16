@@ -87,6 +87,10 @@ const EXCLUDE_PATTERNS = [
   /package-lock\.json$/,
   /yarn\.lock$/,
   /pnpm-lock\.yaml$/,
+  // O package.json de subprojeto tambem e alvo do Dependabot: um bump ali muda
+  // o hash e reprova a validacao do mesmo jeito que o lockfile. O package.json
+  // da raiz continua rastreado, por estar em ALWAYS_INCLUDE.
+  /scripts\/diagnostics\/[^/]+\/package\.json$/,
 ];
 
 /**
