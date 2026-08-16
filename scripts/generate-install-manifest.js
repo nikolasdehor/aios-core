@@ -80,6 +80,13 @@ const EXCLUDE_PATTERNS = [
   /manifests\/tasks\.csv$/,
   /manifests\/workers\.csv$/,
   /index\.d\.ts$/, // Generated TypeScript definitions
+  // Lockfiles mudam a cada atualizacao de dependencia. Rastrear o hash deles
+  // faz toda PR do Dependabot reprovar em 'Install Manifest Validation' ate
+  // alguem rodar generate:manifest na mao. O conteudo instalavel do framework
+  // e verificado pelos demais arquivos.
+  /package-lock\.json$/,
+  /yarn\.lock$/,
+  /pnpm-lock\.yaml$/,
 ];
 
 /**
